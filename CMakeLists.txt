@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.14)
+project(Utils LANGUAGES CXX)
+add_library(Utils INTERFACE)
+file(GLOB UtilFiles "src/Utils/*.h" "src/Utils/Memory/*.h" "src/Utils/Strings/*.h")
+target_include_directories(Utils PUBLIC "src/Utils")
+target_compile_features(Utils INTERFACE cxx_std_17)
