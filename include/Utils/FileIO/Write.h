@@ -9,7 +9,7 @@ namespace FileIO {
         Append = 0,
         Overwrite
     };
-    void WriteFile(std::string& fileName, std::string& data, WriteType wt = WriteType::Append){
+    void WriteFile(std::string fileName, std::string data, WriteType wt = WriteType::Append){
         std::ios_base::openmode fileMode = (wt == WriteType::Append) ? std::ios::app : std::ios::trunc;
         std::ofstream file(fileName, fileMode);
 
@@ -21,7 +21,7 @@ namespace FileIO {
         file << data;
         file.close();
     }
-    void WriteFile_Binary(const std::string& filename, const std::vector<char>& data, WriteType mode) {
+    void WriteFile_Binary(const std::string filename, const std::vector<char>& data, WriteType mode) {
         std::ios_base::openmode fileMode = std::ios::binary;
         fileMode |= (mode == WriteType::Append) ? std::ios::app : std::ios::trunc;
     
