@@ -3,7 +3,9 @@
 ## Available Utils
 
 ### Logger
+
 ```cpp
+
 #include <Utils/Logger.h>
 
 Logger logger = Logger("name", "logFilePath", true);
@@ -12,7 +14,6 @@ Logger logger = Logger("name", "logFilePath", true);
 logger.InfoLog("THIS IS A LOG")
 
 // Info Log with format
-logger.InfoLog("THIS IS A LOG my name is %s",logger.getName())
-
+logger.InfoLog("THIS IS A LOG my name is %s", logger.getLoggerName())
 
 ```
