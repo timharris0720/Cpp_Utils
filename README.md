@@ -23,7 +23,7 @@ logger.InfoLog("THIS IS A LOG my name is %s", logger.getLoggerName());
 ```cpp
 
 #include <Utils/FileIO.h> // Includes both write and read files
-//#include <Utils/FileIO/Write.h>  Includes read only
+//#include <Utils/FileIO/Write.h>  Includes write only
 FileIO::WriteFile(filename, stringData); // Append - default
 FileIO::WriteFile(filename, stringData, FileIO::Overwrite); // Overwrite a file
 
