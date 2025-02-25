@@ -48,3 +48,7 @@ std::vector<char> fileContent = FileIO::readFileBinary(filename); // read a whol
 std::string fileContent_String = FileIO::readFile(filename);
 
 ```
+
+### ArgParse
+
+See here for usage [HERE](argParse_Readme.md)
