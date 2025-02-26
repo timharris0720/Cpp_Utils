@@ -18,6 +18,7 @@
     #include <string_view>
     #include "Strings/stringOps.h"
     using PID_TYPE = DWORD;
+    #pragma comment(lib, "Wtsapi32.lib")
 #else
     #include <sys/ptrace.h>
     #include <sys/types.h>
