@@ -2,7 +2,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
+#include <locale>
+#include <codecvt>
 
 namespace String {
     std::string StripString(std::string str, std::string stripChar = "")
@@ -93,4 +94,10 @@ namespace String {
         }
         return inputString;
     }
+    std::string WcharToString(const wchar_t* wcharStr) {
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        return converter.to_bytes(wcharStr);
+    }
+    
+
 }
