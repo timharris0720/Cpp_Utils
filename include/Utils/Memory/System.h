@@ -117,8 +117,8 @@ namespace Memory {
             entry.dwSize = sizeof(PROCESSENTRY32);
             if (Process32First(snap, &entry)) {
                 do {
-                    std::string name = String::WcharToString(entry.szExeFile);
-                    if (name == processName) {
+                    //std::string name = String::WcharToString(entry.szExeFile);
+                    if (strcmp((char*)entry.szExeFile, processName.c_str())) {
                         CloseHandle(snap);
                         return entry.th32ProcessID;
                     }
