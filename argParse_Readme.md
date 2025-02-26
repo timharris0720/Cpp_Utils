@@ -1,4 +1,4 @@
-TAKEN FROM [https://github.com/p-ranav/argparse](https://github.com/p-ranav/argparse)
+TAKEN FROM [https://github.com/p-ranav/argparse](https://github.com/p-ranav/argparse) - Version: v3.2
 
 ## Table of Contents
 
@@ -1350,65 +1350,6 @@ Advanced options:
                [-b]
 ```
 
-## Developer Notes
-
-### Copying and Moving
-
-`argparse::ArgumentParser` is intended to be used in a single function - setup everything and parse arguments in one place. Attempting to move or copy invalidates internal references (issue #260). Thus, starting with v3.0, `argparse::ArgumentParser` copy and move constructors are marked as `delete`.
-
-## CMake Integration 
-
-Use the latest argparse in your CMake project without copying any content.  
-
-```cmake
-cmake_minimum_required(VERSION 3.14)
-
-PROJECT(myproject)
-
-# fetch latest argparse
-include(FetchContent)
-FetchContent_Declare(
-    argparse
-    GIT_REPOSITORY https://github.com/p-ranav/argparse.git
-)
-FetchContent_MakeAvailable(argparse)
-
-add_executable(myproject main.cpp)
-target_link_libraries(myproject argparse)
-```
-
-## Bazel Integration
-
-Add an `http_archive` in WORKSPACE.bazel, for example
-
-```starlark
-http_archive(
-    name = "argparse",
-    sha256 = "674e724c2702f0bfef1619161815257a407e1babce30d908327729fba6ce4124",
-    strip_prefix = "argparse-3.1",
-    url = "https://github.com/p-ranav/argparse/archive/refs/tags/v3.1.zip",
-)
-```
-
-## Building, Installing, and Testing
-
-```bash
-# Clone the repository
-git clone https://github.com/p-ranav/argparse
-cd argparse
-
-# Build the tests
-mkdir build
-cd build
-cmake -DARGPARSE_BUILD_SAMPLES=on -DARGPARSE_BUILD_TESTS=on ..
-make
-
-# Run tests
-./test/tests
-
-# Install the library
-sudo make install
-```
 
 ## Supported Toolchains
 
@@ -1417,9 +1358,3 @@ sudo make install
 | GCC >= 8.3.0         | libstdc++        | Ubuntu 18.04       |
 | Clang >= 7.0.0       | libc++           | Xcode 10.2         |
 | MSVC >= 16.8         | Microsoft STL    | Visual Studio 2019 |
-
-## Contributing
-Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
-
-## License
-The project is available under the [MIT](https://opensource.org/licenses/MIT) license.
