@@ -4,8 +4,18 @@
 #include <cstring>
 #include <string>
 #ifdef _WIN32
-    #include <windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <Windows.h>
+    #include <stdio.h>
+    #include <psapi.h>
+    #include <wtsapi32.h>
+    #include <winuser.h>
     #include <tlhelp32.h>
+    #include <stdio.h>
+    #include <iostream>
+    #include <string>
+    #include <tchar.h>
+    #include <string_view>
     #include "Strings/stringOps.h"
     using PID_TYPE = DWORD;
 #else
@@ -19,6 +29,14 @@
     using PID_TYPE = pid_t;
 #endif
 namespace Memory {
+    struct PROCESS {
+        bool Found = false;
+        HANDLE processHandle = NULL;
+        UINT64 ModuleAddrs = 0;
+        int ProcessID = 0;
+    };
+
+
     template <typename T>
     bool ReadMemory(PID_TYPE pid, uintptr_t address, T& buffer) {
     #ifdef _WIN32
@@ -103,29 +121,23 @@ namespace Memory {
         }
         return 0;
     }
-    PID_TYPE GetProcessID(const std::string& processName) {
+    PROCESS GetProcessID(const std::string& processName) {
         #ifdef _WIN32
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        int pid = 0;
+        PROCESS proc;
+        WTS_PROCESS_INFOA* proc_info;
+        DWORD pi_count = 0;
+        if (!WTSEnumerateProcessesA(WTS_CURRENT_SERVER_HANDLE, 0, 1, &proc_info, &pi_count))
+            return proc;
 
-            HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-            if (snap == INVALID_HANDLE_VALUE) {
-                std::cerr << "[ERROR] Failed to create process snapshot!" << std::endl;
-                return 0;
+        for (int i = 0; i < pi_count; i++) {
+            if (lstrcmpiA(processName.c_str(), proc_info[i].pProcessName) == 0) {
+                proc.Found = true;
+                proc.ProcessID = proc_info[i].ProcessId;
+                proc.processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, proc.ProcessID);
+                break;
             }
-        
-            PROCESSENTRY32 entry;
-            entry.dwSize = sizeof(PROCESSENTRY32);
-            if (Process32First(snap, &entry)) {
-                do {
-                    //std::string name = String::WcharToString(entry.szExeFile);
-                    if (strcmp((char*)entry.szExeFile, processName.c_str())) {
-                        CloseHandle(snap);
-                        return entry.th32ProcessID;
-                    }
-                } while (Process32Next(snap, &entry));
-            }
-        
-            CloseHandle(snap);
+        }
         #else
             DIR* dir = opendir("/proc");
             if (!dir) {
@@ -150,6 +162,6 @@ namespace Memory {
         
             closedir(dir);
         #endif
-        return 0;  // Process not found
+        return PROCESS{};  // Process not found
     }
 }
