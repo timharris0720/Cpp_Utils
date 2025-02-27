@@ -123,7 +123,7 @@ namespace Memory {
         return 0;
     }
     PID_TYPE GetProcessID(const std::string& processName) {
-        #ifdef WIN32
+        #ifdef _WIN32
         DWORD processID = 0;
         HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
         if (hSnapshot == INVALID_HANDLE_VALUE) {
@@ -168,6 +168,6 @@ namespace Memory {
         
             closedir(dir);
         #endif
-        return PROCESS{};  // Process not found
+        return 0;  // Process not found
     }
 }
