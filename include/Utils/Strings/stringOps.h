@@ -4,6 +4,7 @@
 #include <iostream>
 #include <locale>
 #include <codecvt>
+#include <cstdlib>
 
 namespace String {
     std::string StripString(std::string str, std::string stripChar = "")
@@ -94,9 +95,13 @@ namespace String {
         }
         return inputString;
     }
-    std::string WcharToString(const wchar_t* wcharStr) {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-        return converter.to_bytes(wcharStr);
+    std::string WcharToChar(const wchar_t* wstr) {
+        size_t len = wcslen(wstr) * 4 + 1;  // Allocate enough space
+        char* buffer = new char[len];
+        wcstombs(buffer, wstr, len);
+        std::string str(buffer);
+        delete[] buffer;
+        return str;
     }
     
 
