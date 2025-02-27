@@ -106,8 +106,8 @@ namespace Memory {
     }
 
     template <typename T>
-    std::vector<void*> ScanProcessMemory(DWORD processID, T targetValue) {
-        std::vector<void*> foundAddresses;
+    std::vector<uintptr_t> ScanProcessMemory(DWORD processID, T targetValue) {
+        std::vector<uintptr_t> foundAddresses;
         #ifdef _WIN32
         HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
     
@@ -127,9 +127,9 @@ namespace Memory {
                 if (ReadProcessMemory(hProcess, address, buffer.data(), mbi.RegionSize, &bytesRead)) {
                     for (size_t i = 0; i < bytesRead / sizeof(T); i++) {
                         if (buffer[i] == targetValue) {
-                            void* foundAddress = (void*)(address + i * sizeof(T));
+                            uintptr_t foundAddress = reinterpret_cast<uintptr_t>(address + i * sizeof(T));
                             foundAddresses.push_back(foundAddress);
-                            std::cout << "[FOUND] Value " << targetValue << " at address: " << foundAddress << std::endl;
+                            std::cout << "[FOUND] Value " << targetValue << " at address: " << std::hex << foundAddress << std::endl;
                         }
                     }
                 }
