@@ -129,7 +129,7 @@ namespace Memory {
                         if (buffer[i] == targetValue) {
                             uintptr_t foundAddress = reinterpret_cast<uintptr_t>(address + i * sizeof(T));
                             foundAddresses.push_back(foundAddress);
-                            std::cout << "[FOUND] Value " << targetValue << " at address: " << std::hex << foundAddress << std::endl;
+                            //std::cout << "[FOUND] Value " << targetValue << " at address: " << std::hex << foundAddress << std::endl;
                         }
                     }
                 }
