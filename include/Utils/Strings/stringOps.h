@@ -5,7 +5,9 @@
 #include <locale>
 #include <codecvt>
 #include <cstdlib>
-
+#ifdef _WIN32
+#include <windows.h>
+#endif
 namespace String {
     std::string StripString(std::string str, std::string stripChar = "")
     {
@@ -95,13 +97,23 @@ namespace String {
         }
         return inputString;
     }
-    std::string WcharToChar(const wchar_t* wstr) {
-        size_t len = wcslen(wstr) * 4 + 1;  // Allocate enough space
-        char* buffer = new char[len];
-        wcstombs(buffer, wstr, len);
-        std::string str(buffer);
-        delete[] buffer;
-        return str;
+    std::string WcharToChar(const WCHAR* wstr) {
+        #ifdef _WIN32
+            if (!wstr) return "";
+        
+            int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
+            std::string str(size_needed, 0);
+            WideCharToMultiByte(CP_UTF8, 0, wstr, -1, &str[0], size_needed, nullptr, nullptr);
+        
+            return str;
+        #else
+            size_t len = wcslen(wstr) * 4 + 1;  // Allocate enough space
+            char* buffer = new char[len];
+            wcstombs(buffer, wstr, len);
+            std::string str(buffer);
+            delete[] buffer;
+            return str;
+        #endif
     }
     
 
