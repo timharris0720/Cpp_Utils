@@ -122,28 +122,22 @@ namespace Memory {
         }
         return 0;
     }
-    PID_TYPE GetProcessID(const std::string& processName) {
+    PID_TYPE GetProcessID(const char* procname) {
         #ifdef _WIN32
-        DWORD processID = 0;
-        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-        if (hSnapshot == INVALID_HANDLE_VALUE) {
-            return 0;
-        }
-    
-        PROCESSENTRY32 entry;
-        entry.dwSize = sizeof(entry);
-        if (Process32First(hSnapshot, &entry)) {
-            do {
-                if (_stricmp(String::WcharToChar(entry.szExeFile).c_str(), processName.c_str()) == 0) {
-                    processID = entry.th32ProcessID;
+            int pid = 0;
+            WTS_PROCESS_INFOA* proc_info;
+            DWORD pi_count = 0;
+            if (!WTSEnumerateProcessesA(WTS_CURRENT_SERVER_HANDLE, 0, 1, &proc_info, &pi_count))
+                return 0;
+        
+            for (int i = 0; i < pi_count; i++) {
+                if (lstrcmpiA(procname, proc_info[i].pProcessName) == 0) {
+                    pid = proc_info[i].ProcessId;
                     break;
                 }
-            } while (Process32Next(hSnapshot, &entry));
-        }
-    
-        CloseHandle(hSnapshot);
-        return processID;
-    
+            }
+            return pid;
+        
         #else
             DIR* dir = opendir("/proc");
             if (!dir) {

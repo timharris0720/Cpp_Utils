@@ -97,7 +97,7 @@ namespace String {
         }
         return inputString;
     }
-    std::string WcharToChar(const WCHAR* wstr) {
+    std::string WcharToChar(WCHAR* wstr) {
         #ifdef _WIN32
             if (!wstr) return "";
         
