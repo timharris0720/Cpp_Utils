@@ -141,6 +141,33 @@ namespace Memory {
         #endif
         return foundAddresses;
     }
+    uintptr_t GetModuleAddress(const char* procname, DWORD dwProcID) noexcept
+    {
+        uintptr_t ModuleBaseAddress = 0;
+        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, dwProcID);
+
+        if (hSnapshot != INVALID_HANDLE_VALUE)
+        {
+            MODULEENTRY32 ModuleEntry32;
+            ModuleEntry32.dwSize = sizeof(MODULEENTRY32);
+
+            if (Module32First(hSnapshot, &ModuleEntry32))
+            {
+                do
+                {
+                    if (lstrcmpiA(procname, (LPCSTR)ModuleEntry32.szModule) == 0)
+                    {
+                        ModuleBaseAddress = (uintptr_t)ModuleEntry32.modBaseAddr;
+                        break;
+                    }
+                } while (Module32Next(hSnapshot, &ModuleEntry32));
+            }
+            CloseHandle(hSnapshot);
+        }
+        return ModuleBaseAddress;
+
+
+    }
     PID_TYPE GetProcessID(const char* procname) {
         #ifdef _WIN32
             int pid = 0;
