@@ -106,21 +106,40 @@ namespace Memory {
     }
 
     template <typename T>
-    uintptr_t ScanMemory(PID_TYPE pid, uintptr_t start, uintptr_t end, T value) {
-        const size_t chunkSize = 4096;  // Read memory in chunks
-        std::vector<char> buffer(chunkSize);
-
-        for (uintptr_t addr = start; addr < end; addr += chunkSize) {
-            if (ReadMemory(pid, addr, buffer)) {
-                for (size_t i = 0; i < chunkSize - sizeof(T); i++) {
-                    T* data = reinterpret_cast<T*>(&buffer[i]);
-                    if (*data == value) {
-                        return addr + i;
+    std::vector<void*> ScanProcessMemory(DWORD processID, T targetValue) {
+        std::vector<void*> foundAddresses;
+        #ifdef _WIN32
+        HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
+    
+        if (!hProcess) {
+            std::cerr << "[ERROR] Failed to open process! Error: " << GetLastError() << std::endl;
+            return foundAddresses;
+        }
+    
+        MEMORY_BASIC_INFORMATION mbi;
+        unsigned char* address = nullptr;  // Start at NULL and iterate through memory
+    
+        while (VirtualQueryEx(hProcess, address, &mbi, sizeof(mbi))) {
+            if (mbi.State == MEM_COMMIT && (mbi.Protect & PAGE_READWRITE)) {
+                std::vector<T> buffer(mbi.RegionSize / sizeof(T));
+    
+                SIZE_T bytesRead;
+                if (ReadProcessMemory(hProcess, address, buffer.data(), mbi.RegionSize, &bytesRead)) {
+                    for (size_t i = 0; i < bytesRead / sizeof(T); i++) {
+                        if (buffer[i] == targetValue) {
+                            void* foundAddress = (void*)(address + i * sizeof(T));
+                            foundAddresses.push_back(foundAddress);
+                            std::cout << "[FOUND] Value " << targetValue << " at address: " << foundAddress << std::endl;
+                        }
                     }
                 }
             }
+            address += mbi.RegionSize;  // Move to the next region
         }
-        return 0;
+    
+        CloseHandle(hProcess);
+        #endif
+        return foundAddresses;
     }
     PID_TYPE GetProcessID(const char* procname) {
         #ifdef _WIN32
