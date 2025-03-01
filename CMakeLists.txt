@@ -4,7 +4,7 @@ include(FetchContent)
 FetchContent_Declare(
   cpr
   GIT_REPOSITORY https://github.com/libcpr/cpr.git
-  GIT_TAG        latest # Replace with the latest release or desired tag
+  GIT_TAG        1.11.2 # Replace with the latest release or desired tag
 )
 FetchContent_MakeAvailable(cpr)
 
