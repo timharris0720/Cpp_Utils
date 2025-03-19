@@ -13,8 +13,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(argparse)
 add_library(CppUtils INTERFACE)
-file(GLOB UtilFiles "include/Utils/*.h" "include/Utils/Memory/*.h" "include/Utils/Strings/*.h")
-target_include_directories(CppUtils INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB UtilFiles "include/Utils/*.h" "include/Utils/*.hpp" "include/Utils/Web/*.h" "include/Utils/System/*.h" "include/Utils/FileIO/*.h" "include/Utils/Memory/*.h" "include/Utils/Strings/*.h" "include/Utils/Typese/*.h")
+  target_include_directories(CppUtils INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(CppUtils INTERFACE UtilFiles)
 target_link_libraries(CppUtils INTERFACE cpr::cpr argparse)
 # Expose the include directory
