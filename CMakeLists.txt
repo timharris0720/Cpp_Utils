@@ -4,6 +4,7 @@ include(FetchContent)
 
 option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
 option(ENABLE_ARGUMENT_PARSER  "Enable web requests in utils library" ON)
+option(ENABLE_JSON  "Enable JSON in utils library" ON)
 
 
 # Create an INTERFACE library
@@ -33,5 +34,14 @@ if (ENABLE_ARGUMENT_PARSER)
     target_compile_definitions(CppUtils INTERFACE ENABLE_ARGUMENT_PARSER)
 endif()
 
-
+if(ENABLE_JSON)
+    FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json
+        GIT_TAG v3.11.3
+    )
+    FetchContent_MakeAvailable(json)
+    target_link_libraries(CppUtils INTERFACE json)
+    target_compile_definitions(CppUtils INTERFACE ENABLE_JSON)
+endif()
 # Expose the include directory
