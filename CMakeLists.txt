@@ -41,7 +41,7 @@ if(ENABLE_JSON)
         GIT_TAG v3.11.3
     )
     FetchContent_MakeAvailable(json)
-    target_link_libraries(CppUtils INTERFACE json)
+    target_link_libraries(CppUtils INTERFACE nlohmann_json::nlohmann_json)
     target_compile_definitions(CppUtils INTERFACE ENABLE_JSON)
 endif()
 # Expose the include directory
