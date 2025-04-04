@@ -31,22 +31,27 @@ namespace FileIO {
             return;
         }
 
-        if constexpr (std::is_trivially_copyable_v<T>) {
-            // Trivially copyable type (e.g., int, float, char, POD struct)
+        // Check if the data is trivially copyable (single object)
+        if (std::is_trivially_copyable<T>::value) {
+            // Write single trivially copyable object
             file.write(reinterpret_cast<const char*>(&data), sizeof(T));
-        } 
-        else if constexpr (
-            requires {
-                typename T::value_type;
-                data.data();
-                data.size();
-            } && std::is_trivially_copyable_v<typename T::value_type>) 
-        {
-            // A container of trivially copyable elements (e.g., std::vector<char>)
-            file.write(reinterpret_cast<const char*>(data.data()), data.size() * sizeof(typename T::value_type));
-        } 
+        }
         else {
-            static_assert(sizeof(T) == 0, "Unsupported type for binary writing");
+            // If the data is a container (like std::vector), handle it
+            using ValueType = typename T::value_type;
+            if (data.data() && data.size()) {
+                // Ensure the value type is trivially copyable
+                static_assert(std::is_trivially_copyable<ValueType>::value,
+                              "Only trivially copyable types are supported in containers.");
+
+                // Write the vector data
+                file.write(reinterpret_cast<const char*>(data.data()),
+                           data.size() * sizeof(ValueType));
+            }
+            else {
+                // If it's not a container-like structure, trigger error
+                static_assert(sizeof(T) == 0, "Unsupported type for binary writing.");
+            }
         }
 
         file.close();
