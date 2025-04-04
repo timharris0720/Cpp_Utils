@@ -1,3 +1,3 @@
 #ifdef ENABLE_JSON
-#include <argparse/argparse.hpp>
+#include <nlohmann/json.hpp>
 #endif
