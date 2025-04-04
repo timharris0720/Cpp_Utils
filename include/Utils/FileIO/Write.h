@@ -38,9 +38,9 @@ namespace FileIO {
         }
         else {
             // If the data is a container (like std::vector), handle it
-            using ValueType = typename T::value_type;
-            if (data.data() && data.size()) {
+            if constexpr (std::is_same<T, std::vector<typename T::value_type>>::value) {
                 // Ensure the value type is trivially copyable
+                using ValueType = typename T::value_type;
                 static_assert(std::is_trivially_copyable<ValueType>::value,
                               "Only trivially copyable types are supported in containers.");
 
