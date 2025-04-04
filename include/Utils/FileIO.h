@@ -1,3 +1,3 @@
 #pragma once
-#include "FileIO/write.h"
-#include "FileIO/read.h"
+#include "FileIO/Write.h"
+#include "FileIO/Read.h"
