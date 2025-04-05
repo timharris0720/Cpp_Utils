@@ -3,8 +3,9 @@ project(CppUtils LANGUAGES CXX)
 include(FetchContent)
 
 option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
-option(ENABLE_ARGUMENT_PARSER  "Enable web requests in utils library" ON)
+option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" ON)
 option(ENABLE_JSON  "Enable JSON in utils library" ON)
+option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" ON)
 
 
 # Create an INTERFACE library
@@ -43,5 +44,9 @@ if(ENABLE_JSON)
     FetchContent_MakeAvailable(json)
     target_link_libraries(CppUtils INTERFACE nlohmann_json::nlohmann_json)
     target_compile_definitions(CppUtils INTERFACE ENABLE_JSON)
+endif()
+
+if(ENABLE_SOCKETS)
+    target_compile_definitions(CppUtils INTERFACE ENABLE_SOCKETS)
 endif()
 # Expose the include directory
