@@ -115,6 +115,14 @@ namespace String {
             return str;
         #endif
     }
+    std::string charArrayToLetterString(std::vector<char> buffer){
+        std::string result(buffer.begin(), buffer.end()); // Convert vector to string
+
+        // Remove all null characters ('\0')
+        result.erase(std::remove(result.begin(), result.end(), '\0'), result.end());    
+
+        return result;
+    }
     
 
 }
