@@ -20,7 +20,7 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(utf8cpp)
-target_link_libraries(my_app PRIVATE utf8::utf8)
+target_link_libraries(CppUtils PRIVATE utf8::utf8)
 
 
 if (ENABLE_WEB_REQUESTS)
