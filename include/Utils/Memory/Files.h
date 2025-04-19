@@ -7,7 +7,7 @@
 #include <locale>
 #include <codecvt>
 #include <type_traits>
-
+#include "../Types.h"
 namespace Memory {
     char readByte(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
@@ -23,7 +23,7 @@ namespace Memory {
         int value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(int))) {
             std::cerr << "Error reading file!" << std::endl;
-            return int{};
+            return 0;
         }
         return value;
     }
@@ -32,7 +32,7 @@ namespace Memory {
         unsigned int value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(unsigned int))) {
             std::cerr << "Error reading file!" << std::endl;
-            return int{};
+            return 0;
         }
         return value;
     }
@@ -41,7 +41,7 @@ namespace Memory {
         int64_t value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(int64_t))) {
             std::cerr << "Error reading file!" << std::endl;
-            return int64_t{};
+            return 0;
         }
         return value;
     }
@@ -50,30 +50,11 @@ namespace Memory {
         uint64_t value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(uint64_t))) {
             std::cerr << "Error reading file!" << std::endl;
-            return uint64_t{};
-        }
-        return value;
-    }
-    
-    int32_t readInt24(std::ifstream& file, std::streampos offset) {
-        file.seekg(offset, std::ios::beg);  // Move to the correct offset
-    
-        std::array<uint8_t, 3> buffer = {0, 0, 0};  // Buffer to hold 3 bytes
-        if (!file.read(reinterpret_cast<char*>(buffer.data()), 3)) {
-            std::cerr << "Error reading 24-bit integer from file!" << std::endl;
             return 0;
         }
-    
-        // Convert 3-byte buffer into a 32-bit signed integer
-        int32_t value = (buffer[0]) | (buffer[1] << 8) | (buffer[2] << 16);
-    
-        // Sign extension for 24-bit signed integers
-        if (value & 0x800000) {  // If the 24th bit (0x800000) is set, it's negative
-            value |= 0xFF000000;  // Extend the sign to 32 bits
-        }
-    
         return value;
     }
+    
 
     unsigned short readUint16(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
@@ -100,7 +81,7 @@ namespace Memory {
         float value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(float))) {
             std::cerr << "Error reading file!" << std::endl;
-            return uint16_t{};
+            return 0.0;
         }
         return value;
     }
@@ -110,26 +91,57 @@ namespace Memory {
         double value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(double))) {
             std::cerr << "Error reading file!" << std::endl;
-            return uint16_t{};
+            return 0.0;
         }
         return value;
     }
     template <typename T>
     std::vector<T> readBytes(std::ifstream& file, std::streampos offset, int byteToRead = 1){
+        file.seekg(offset);
         std::vector<T> buffer(byteToRead);
         if (!file.read(reinterpret_cast<char*>(buffer.data()), byteToRead * sizeof(T))) {
             std::cerr << "Error reading file!" << std::endl;
+            
             return std::vector<T>{};  // Return empty vector
+            
         }
         return buffer;
     }
     template <typename T>
-    T readType(std::ifstream& file, std::streampos offset, int byteToRead = 1){
-        T buffer(byteToRead);
-        if (!file.read(reinterpret_cast<char*>(buffer), byteToRead * sizeof(T))) {
-            std::cerr << "Error reading file!" << std::endl;
+    T readType(std::ifstream& file, std::streampos offset,int size = sizeof(T)){
+        file.seekg(offset);
+        T buffer(size);
+        if (!file.read(reinterpret_cast<char*>(&buffer), size)) {
+            std::cerr << "Error reading file! readtype" << std::endl;
             return T{};  // Return empty vector
         }
         return buffer;
     }
+
+    Int24 readInt24(std::ifstream& file, std::streampos offset){
+        file.seekg(offset);
+        uint8_t buf[3];
+        if (!file.read(reinterpret_cast<char*>(&buf), 3)) {
+            std::cerr << "Error reading file!" << std::endl;
+            return 0;
+        }
+        Int24 blockNumber = Int24::fromBytes(buf);
+        return blockNumber;
+    }
+    int32_t readInt24AsInt32(Int24 value) {
+        uint8_t blockBytes[3] = {0};
+        value.toBytes(blockBytes);
+        // Combine the 3 bytes into a single 24-bit number
+        int32_t blockNumber = (static_cast<int32_t>(blockBytes[0])) |
+                            (static_cast<int32_t>(blockBytes[1]) << 8) |
+                            (static_cast<int32_t>(blockBytes[2]) << 16);
+
+        // Handle sign extension for the int24 -> int32 conversion
+        if (blockNumber & 0x00800000) {  // Check if the sign bit is set (24th bit)
+            blockNumber |= 0xFF000000;    // Sign-extend to 32-bit
+        }
+
+        return blockNumber;
+    }
+
 }

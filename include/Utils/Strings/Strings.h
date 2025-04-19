@@ -5,6 +5,9 @@
 #include <locale>
 #include <codecvt>
 #include <cstdlib>
+
+#include <utf8/utf8.h>
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -123,6 +126,40 @@ namespace String {
 
         return result;
     }
-    
+
+    std::string utf16_to_utf8(const std::u16string& input) {
+        std::string output;
+        utf8::utf16to8(input.begin(), input.end(), std::back_inserter(output));
+        return output;
+    }
+    std::string utf16le_to_utf8(const char16_t* data, size_t max_chars) {
+        std::u16string utf16(data, max_chars);
+
+        // Trim null terminator if present
+        size_t end = utf16.find(u'\0');
+        if (end != std::u16string::npos) {
+            utf16 = utf16.substr(0, end);
+        }
+
+        std::string output;
+        utf8::utf16to8(utf16.begin(), utf16.end(), std::back_inserter(output));
+        return output;
+    }
+    template< typename T >
+    std::string int_to_hex( T my_integer )
+    {
+        std::stringstream sstream;
+        sstream << "0x" << std::hex << my_integer;
+        return sstream.str();
+    }
+    std::string displayParse(std::vector<char> arr){
+        std::string str;
+        for(int i = 0; i < arr.size(); i++){
+            if(arr[i] != 0x00){
+                str += arr[i];
+            }
+        }
+        return str;
+    }
 
 }

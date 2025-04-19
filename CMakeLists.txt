@@ -13,6 +13,16 @@ add_library(CppUtils INTERFACE)
 target_include_directories(CppUtils INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 
+FetchContent_Declare(
+    utf8cpp
+    GIT_REPOSITORY https://github.com/nemtrif/utfcpp.git
+    GIT_TAG master  # or specify a stable commit/tag
+)
+
+FetchContent_MakeAvailable(utf8cpp)
+target_link_libraries(my_app PRIVATE utf8::utf8)
+
+
 if (ENABLE_WEB_REQUESTS)
     FetchContent_Declare(
         cpr
