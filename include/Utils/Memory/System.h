@@ -39,7 +39,7 @@ namespace Memory {
 
 
     template <typename T>
-    bool ReadMemory(PID_TYPE pid, uintptr_t address, T& buffer) {
+    inline bool ReadMemory(PID_TYPE pid, uintptr_t address, T& buffer) {
     #ifdef _WIN32
         HANDLE hProcess = OpenProcess(PROCESS_VM_READ, FALSE, pid);
         if (!hProcess) {
@@ -72,7 +72,7 @@ namespace Memory {
         return true;
     }
     template <typename T>
-    bool WriteMemory(PID_TYPE pid, uintptr_t address, const T& buffer) {
+    inline bool WriteMemory(PID_TYPE pid, uintptr_t address, const T& buffer) {
     #ifdef _WIN32
         HANDLE hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
         if (!hProcess) {
@@ -106,7 +106,7 @@ namespace Memory {
     }
 
     template <typename T>
-    std::vector<uintptr_t> ScanProcessMemory(DWORD processID, T targetValue) {
+    inline std::vector<uintptr_t> ScanProcessMemory(DWORD processID, T targetValue) {
         std::vector<uintptr_t> foundAddresses;
         #ifdef _WIN32
         HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
@@ -141,7 +141,7 @@ namespace Memory {
         #endif
         return foundAddresses;
     }
-    uintptr_t GetModuleAddress(const char* procname, DWORD dwProcID) noexcept
+    inline uintptr_t GetModuleAddress(const char* procname, DWORD dwProcID) noexcept
     {
         uintptr_t ModuleBaseAddress = 0;
         HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, dwProcID);
@@ -168,7 +168,7 @@ namespace Memory {
 
 
     }
-    PID_TYPE GetProcessID(const char* procname) {
+    inline PID_TYPE GetProcessID(const char* procname) {
         #ifdef _WIN32
             int pid = 0;
             WTS_PROCESS_INFOA* proc_info;

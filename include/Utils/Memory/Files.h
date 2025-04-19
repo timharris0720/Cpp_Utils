@@ -18,7 +18,7 @@ namespace Memory {
         }
         return value;
     }
-    int readInt32(std::ifstream& file, std::streampos offset){
+    inline int readInt32(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         int value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(int))) {
@@ -27,7 +27,7 @@ namespace Memory {
         }
         return value;
     }
-    unsigned int readUInt32(std::ifstream& file, std::streampos offset){
+    inline unsigned int readUInt32(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         unsigned int value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(unsigned int))) {
@@ -36,7 +36,7 @@ namespace Memory {
         }
         return value;
     }
-    int64_t readInt64(std::ifstream& file, std::streampos offset){
+    inline int64_t readInt64(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         int64_t value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(int64_t))) {
@@ -45,7 +45,7 @@ namespace Memory {
         }
         return value;
     }
-    uint64_t readUInt64(std::ifstream& file, std::streampos offset){
+    inline uint64_t readUInt64(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         uint64_t value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(uint64_t))) {
@@ -56,7 +56,7 @@ namespace Memory {
     }
     
 
-    unsigned short readUint16(std::ifstream& file, std::streampos offset){
+    inline unsigned short readUint16(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         unsigned short value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(unsigned short))) {
@@ -66,7 +66,7 @@ namespace Memory {
         return value;
     }
 
-    short readInt16(std::ifstream& file, std::streampos offset){
+    inline short readInt16(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         short value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(short))) {
@@ -76,7 +76,7 @@ namespace Memory {
         return value;
     }
 
-    float readFloat(std::ifstream& file, std::streampos offset){ // 4BYTE
+    inline float readFloat(std::ifstream& file, std::streampos offset){ // 4BYTE
         file.seekg(offset);
         float value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(float))) {
@@ -86,7 +86,7 @@ namespace Memory {
         return value;
     }
 
-    double readDouble(std::ifstream& file, std::streampos offset){ // 8 BYTE
+    inline double readDouble(std::ifstream& file, std::streampos offset){ // 8 BYTE
         file.seekg(offset);
         double value;
         if (!file.read(reinterpret_cast<char*>(&value), sizeof(double))) {
@@ -96,7 +96,7 @@ namespace Memory {
         return value;
     }
     template <typename T>
-    std::vector<T> readBytes(std::ifstream& file, std::streampos offset, int byteToRead = 1){
+    inline std::vector<T> readBytes(std::ifstream& file, std::streampos offset, int byteToRead = 1){
         file.seekg(offset);
         std::vector<T> buffer(byteToRead);
         if (!file.read(reinterpret_cast<char*>(buffer.data()), byteToRead * sizeof(T))) {
@@ -108,7 +108,7 @@ namespace Memory {
         return buffer;
     }
     template <typename T>
-    T readType(std::ifstream& file, std::streampos offset,int size = sizeof(T)){
+    inline T readType(std::ifstream& file, std::streampos offset,int size = sizeof(T)){
         file.seekg(offset);
         T buffer(size);
         if (!file.read(reinterpret_cast<char*>(&buffer), size)) {
@@ -118,7 +118,7 @@ namespace Memory {
         return buffer;
     }
 
-    Int24 readInt24(std::ifstream& file, std::streampos offset){
+    inline Int24 readInt24(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         uint8_t buf[3];
         if (!file.read(reinterpret_cast<char*>(&buf), 3)) {
@@ -128,7 +128,7 @@ namespace Memory {
         Int24 blockNumber = Int24::fromBytes(buf);
         return blockNumber;
     }
-    int32_t readInt24AsInt32(Int24 value) {
+    inline int32_t readInt24AsInt32(Int24 value) {
         uint8_t blockBytes[3] = {0};
         value.toBytes(blockBytes);
         // Combine the 3 bytes into a single 24-bit number

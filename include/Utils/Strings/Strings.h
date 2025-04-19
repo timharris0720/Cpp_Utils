@@ -12,7 +12,7 @@
 #include <windows.h>
 #endif
 namespace String {
-    std::string StripString(std::string str, std::string stripChar = "")
+    inline std::string StripString(std::string str, std::string stripChar = "")
     {
         if (str.length() != 0)
         {
@@ -35,7 +35,7 @@ namespace String {
         }
         return str;
     }
-    std::vector<std::string> SplitString(const std::string& istr, const std::string& del, int maxSplits = -1) {
+    inline std::vector<std::string> SplitString(const std::string& istr, const std::string& del, int maxSplits = -1) {
         std::vector<std::string> arr;
 
         int strleng = istr.length();
@@ -68,14 +68,14 @@ namespace String {
         arr.push_back(istr.substr(k, strleng - k));
         return arr;
     }
-    std::string RemovePrefix(std::string str, std::string prefix) {
+    inline std::string RemovePrefix(std::string str, std::string prefix) {
         
         return str.substr(prefix.length());
     }
-    std::string RemoveSuffix(std::string str, std::string suffix) {
+    inline std::string RemoveSuffix(std::string str, std::string suffix) {
         return str.substr(0, str.length() - suffix.length());
     }
-    bool Contains(std::string str, std::string sstr) {
+    inline bool Contains(std::string str, std::string sstr) {
         if (str.find(sstr) != std::string::npos) {
             return true; // substring found
         }
@@ -83,7 +83,7 @@ namespace String {
             return false; // substring not found
         }
     }
-    std::string Replace(std::string inputString, std::string substring, std::string replacement) {
+    inline std::string Replace(std::string inputString, std::string substring, std::string replacement) {
         bool allOccurencesFound = false;
         
         size_t index = 0;
@@ -100,7 +100,7 @@ namespace String {
         }
         return inputString;
     }
-    std::string WcharToChar(WCHAR* wstr) {
+    inline std::string WcharToChar(WCHAR* wstr) {
         #ifdef _WIN32
             if (!wstr) return "";
         
@@ -118,7 +118,7 @@ namespace String {
             return str;
         #endif
     }
-    std::string charArrayToLetterString(std::vector<char> buffer){
+    inline std::string charArrayToLetterString(std::vector<char> buffer){
         std::string result(buffer.begin(), buffer.end()); // Convert vector to string
 
         // Remove all null characters ('\0')
@@ -127,12 +127,12 @@ namespace String {
         return result;
     }
 
-    std::string utf16_to_utf8(const std::u16string& input) {
+    inline std::string utf16_to_utf8(const std::u16string& input) {
         std::string output;
         utf8::utf16to8(input.begin(), input.end(), std::back_inserter(output));
         return output;
     }
-    std::string utf16le_to_utf8(const char16_t* data, size_t max_chars) {
+    inline std::string utf16le_to_utf8(const char16_t* data, size_t max_chars) {
         std::u16string utf16(data, max_chars);
 
         // Trim null terminator if present
@@ -146,13 +146,13 @@ namespace String {
         return output;
     }
     template< typename T >
-    std::string int_to_hex( T my_integer )
+    inline std::string int_to_hex( T my_integer )
     {
         std::stringstream sstream;
         sstream << "0x" << std::hex << my_integer;
         return sstream.str();
     }
-    std::string displayParse(std::vector<char> arr){
+    inline std::string displayParse(std::vector<char> arr){
         std::string str;
         for(int i = 0; i < arr.size(); i++){
             if(arr[i] != 0x00){
@@ -161,7 +161,7 @@ namespace String {
         }
         return str;
     }
-    std::string toNumericString(const char* arr, int leng) {
+    inline std::string toNumericString(const char* arr, int leng) {
         return std::string(arr, leng);
     }
 

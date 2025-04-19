@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 namespace FileIO {
-    std::vector<char> readFileBinary(const std::string& filename) {
+    inline std::vector<char> readFileBinary(const std::string& filename) {
         std::ifstream file(filename, std::ios::binary | std::ios::ate);
         if (!file) {
             std::cerr << "Error opening file: " << filename << std::endl;
@@ -23,7 +23,7 @@ namespace FileIO {
 
         return buffer;
     }
-    std::string readFile(const std::string& filename) {
+    inline std::string readFile(const std::string& filename) {
         std::ifstream file(filename);
         if (!file) {
             std::cerr << "Error opening file: " << filename << std::endl;
