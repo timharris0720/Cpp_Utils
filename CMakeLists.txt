@@ -17,6 +17,7 @@ FetchContent_Declare(
     utf8cpp
     GIT_REPOSITORY https://github.com/nemtrif/utfcpp.git
     GIT_TAG master  # or specify a stable commit/tag
+	EXCLUDE_FROM_ALL TRUE
 )
 
 FetchContent_MakeAvailable(utf8cpp)
