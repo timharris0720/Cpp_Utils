@@ -6,7 +6,7 @@
 #include <codecvt>
 #include <cstdlib>
 #include <sstream>
-#include <utf8.h>
+#include "utf8.h"
 
 #ifdef _WIN32
 #include <windows.h>
