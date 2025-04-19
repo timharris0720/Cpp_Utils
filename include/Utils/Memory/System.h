@@ -16,7 +16,7 @@
     #include <string>
     #include <tchar.h>
     #include <string_view>
-    #include "Strings/stringOps.h"
+    #include "Strings/Strings.h"
     using PID_TYPE = DWORD;
     #pragma comment(lib, "Wtsapi32.lib")
 #else
