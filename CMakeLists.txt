@@ -21,7 +21,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(utf8cpp)
 target_include_directories(CppUtils INTERFACE  ${utf8cpp_SOURCE_DIR}/source )
-target_link_libraries(CppUtils INTERFACE utf8::utf8)
+//target_link_libraries(CppUtils INTERFACE utf8::utf8)
 
 
 
