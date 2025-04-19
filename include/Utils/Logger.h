@@ -10,8 +10,6 @@
 #include <Windows.h>
 #endif
 
-bool WriteLogFile = true;
-
 class Logger {
 private:
     std::string LogFile;
@@ -34,11 +32,9 @@ public:
     Logger(std::string loggerName, std::string pathLogFile, bool fileLogging = true) {LoggerName = loggerName;LogFile=pathLogFile; InfoLogTitle = "[ INFO | " + LoggerName + "] : "; DebuLogTitle = "[ DEBUG | " + LoggerName + "] : "; ErroLogTitle = "[ ERROR | " + LoggerName + "] : ";LogToFile = fileLogging;}
     void ToggleFileLogging(){
         LogToFile = !LogToFile;
-		WriteLogFile  = LogToFile;
     }
     void ToggleFileLogging(bool decider){
         LogToFile = decider;
-		WriteLogFile  = LogToFile;
     }
 	void setLoggerName(std::string name_){
 		LoggerName = name_;

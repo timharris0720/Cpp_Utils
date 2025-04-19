@@ -1,2 +1,2 @@
 #pragma once
-#include "Types/types.h"
+#include "Types/int24.h"
