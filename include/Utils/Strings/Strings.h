@@ -161,5 +161,8 @@ namespace String {
         }
         return str;
     }
+    std::string toNumericString(const char* arr, int leng) {
+        return std::string(arr, leng);
+    }
 
 }
