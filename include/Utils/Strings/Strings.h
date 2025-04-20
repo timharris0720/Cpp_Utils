@@ -161,8 +161,40 @@ namespace String {
         }
         return str;
     }
-    inline std::string toNumericString(const char* arr, int leng) {
-        return std::string(arr, leng);
+    inline std::string WcharToChar(wchar_t* wstr) {
+        #ifdef _WIN32
+            if (!wstr) return "";
+        
+            int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
+            std::string str(size_needed, 0);
+            WideCharToMultiByte(CP_UTF8, 0, wstr, -1, &str[0], size_needed, nullptr, nullptr);
+        
+            return str;
+        #else
+            size_t len = wcslen(wstr) * 4 + 1;  // Allocate enough space
+            char* buffer = new char[len];
+            wcstombs(buffer, wstr, len);
+            std::string str(buffer);
+            delete[] buffer;
+            return str;
+        #endif
+    }
+    inline std::string charArrayToLetterString(std::vector<char> buffer){
+        std::string result(buffer.begin(), buffer.end()); // Convert vector to string
+
+        // Remove all null characters ('\0')
+        result.erase(std::remove(result.begin(), result.end(), '\0'), result.end());    
+
+        return result;
+    }
+    template <typename T>
+    inline std::string toNumericString(const T* data, size_t size) {
+        std::string result;
+        result.reserve(size);
+        for (size_t i = 0; i < size; ++i) {
+            result += std::to_string(data[i]);
+        }
+        return result;
     }
 
 }
