@@ -9,7 +9,7 @@
 #include <type_traits>
 #include "../Types.h"
 namespace Memory {
-    char readByte(std::ifstream& file, std::streampos offset){
+    inline char readByte(std::ifstream& file, std::streampos offset){
         file.seekg(offset);
         char value;
         if (!file.read(reinterpret_cast<char*>(&value), 1)) {
