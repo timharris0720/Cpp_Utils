@@ -34,4 +34,20 @@ namespace FileIO {
         file.close();
         return content;
     }
+    inline std::vector<std::string> readFileLines(const std::string& filename) {
+        std::ifstream file(filename);
+        std::vector<std::string> lines;
+        std::string line;
+
+        if (!file.is_open()) {
+            std::cerr << "Could not open file: " << filename << std::endl;
+            return lines;
+        }
+
+        while (std::getline(file, line)) {
+            lines.push_back(line);
+        }
+
+        return lines;
+    }
 }

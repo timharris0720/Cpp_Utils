@@ -12,6 +12,9 @@
 #include <windows.h>
 #endif
 namespace String {
+    namespace StripTypes {
+        inline std::string Newline = "\n";
+    }
     inline std::string StripString(std::string str, std::string stripChar = "")
     {
         if (str.length() != 0)

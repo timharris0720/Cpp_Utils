@@ -29,7 +29,7 @@ private:
 
 public:
     Logger() = default;
-    Logger(std::string loggerName, std::string pathLogFile, bool fileLogging = true) {LoggerName = loggerName;LogFile=pathLogFile; InfoLogTitle = "[ INFO | " + LoggerName + "] : "; DebuLogTitle = "[ DEBUG | " + LoggerName + "] : "; ErroLogTitle = "[ ERROR | " + LoggerName + "] : ";LogToFile = fileLogging;}
+    Logger(std::string loggerName, std::string pathLogFile = "Log.txt", bool fileLogging = true) {LoggerName = loggerName;LogFile=pathLogFile; InfoLogTitle = "[ INFO | " + LoggerName + "] : "; DebuLogTitle = "[ DEBUG | " + LoggerName + "] : "; ErroLogTitle = "[ ERROR | " + LoggerName + "] : ";LogToFile = fileLogging;}
     void ToggleFileLogging(){
         LogToFile = !LogToFile;
     }
