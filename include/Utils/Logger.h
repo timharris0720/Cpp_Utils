@@ -9,7 +9,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-
+namespace Logging {
+inline bool writeToLogFile_Global = true;
+}
 class Logger {
 private:
     std::string LogFile;
@@ -69,7 +71,7 @@ public:
 
 		// Return the formatted string as a std::string
 		std::cout << std::endl;
-		if (LogToFile == true) {
+		if (LogToFile == true || writeToLogFile_Global == true) {
 			va_list args;
 			va_start(args, fmt);
 
@@ -112,7 +114,7 @@ public:
 		va_end(args);
 		std::cout << std::endl;
 
-		if (LogToFile == true) {
+		if (LogToFile == true || writeToLogFile_Global == true) {
 			va_list args;
 			va_start(args, fmt);
 
@@ -152,7 +154,7 @@ public:
 		va_end(args);
 		std::cout << std::endl;
 
-		if (LogToFile == true) {
+		if (LogToFile == true || writeToLogFile_Global == true) {
 			va_list args;
 			va_start(args, fmt);
 			size_t size = std::vsnprintf(nullptr, 0, fmt, args) + 1;
