@@ -6,6 +6,7 @@ option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
 option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" ON)
 option(ENABLE_JSON  "Enable JSON in utils library" ON)
 option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" ON)
+option(ENABLE_REFLECTION  "Enable Reflection Support in utils library" OFF)
 
 
 # Create an INTERFACE library
@@ -49,5 +50,22 @@ endif()
 
 if(ENABLE_SOCKETS)
     target_compile_definitions(CppUtils INTERFACE ENABLE_SOCKETS)
+endif()
+
+if (ENABLE_REFLECTION)
+    FetchContent_Declare(
+        rttr
+        GIT_REPOSITORY https://github.com/rttrorg/rttr.git
+        GIT_TAG master
+    )
+    set(RTTR_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(RTTR_BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+    set(RTTR_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(RTTR_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+    set(RTTR_INSTALL_CMAKE_CONFIG_MODULE OFF CACHE BOOL "" FORCE)
+    set(RTTR_BUILD_PACKAGE OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(rttr)
+    target_link_libraries(CppUtils INTERFACE  RTTR::Core_Lib)
+    target_compile_definitions(CppUtils INTERFACE ENABLE_REFLECTION)
 endif()
 # Expose the include directory
