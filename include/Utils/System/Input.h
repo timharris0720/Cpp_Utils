@@ -1,11 +1,12 @@
 #pragma once
-
+#include <unordered_map>
 #ifdef _WIN32
     #include <windows.h>
 #elif __linux__
     #include <X11/Xlib.h>
     #include <X11/Xutil.h>
     #include <X11/XKBlib.h>
+    #include <X11/keysym.h>
     #include <unistd.h>
 #elif __APPLE__
     #include <ApplicationServices/ApplicationServices.h>
@@ -68,26 +69,69 @@ struct KeyCode {
     static constexpr int F10 = VK_F10;
     static constexpr int F11 = VK_F11;
     static constexpr int F12 = VK_F12;
+    static constexpr int F13 = VK_F13;
+    static constexpr int F14 = VK_F14;
+    static constexpr int F15 = VK_F15;
+    static constexpr int F16 = VK_F16;
+    static constexpr int F17 = VK_F17;
+    static constexpr int F18 = VK_F18;
+    static constexpr int F19 = VK_F19;
+    static constexpr int F20 = VK_F20;
+    static constexpr int F21 = VK_F21;
+    static constexpr int F22 = VK_F22;
+    static constexpr int F23 = VK_F23;
+    static constexpr int F24 = VK_F24;
 
-    // Special Keys
+    // Special Keys#
     static constexpr int LeftShift = VK_LSHIFT;
     static constexpr int RightShift = VK_RSHIFT;
     static constexpr int LeftCtrl = VK_LCONTROL;
     static constexpr int RightCtrl = VK_RCONTROL;
     static constexpr int LeftAlt = VK_LMENU;
     static constexpr int RightAlt = VK_RMENU;
+    static constexpr int CapsLock = VK_CAPITAL;
 
+    // Navigation keys
     static constexpr int Enter = VK_RETURN;
     static constexpr int Backspace = VK_BACK;
     static constexpr int Tab = VK_TAB;
     static constexpr int Escape = VK_ESCAPE;
     static constexpr int Space = VK_SPACE;
+    static constexpr int Insert = VK_INSERT;
+    static constexpr int Delete = VK_DELETE;
+    static constexpr int Home = VK_HOME;
+    static constexpr int End = VK_END;
+    static constexpr int PageUp = VK_PRIOR;
+    static constexpr int PageDown = VK_NEXT;
 
+    // Arrow keys
     static constexpr int LeftArrow = VK_LEFT;
     static constexpr int RightArrow = VK_RIGHT;
     static constexpr int UpArrow = VK_UP;
     static constexpr int DownArrow = VK_DOWN;
 
+    static constexpr int Numpad0 = VK_NUMPAD0;
+    static constexpr int Numpad1 = VK_NUMPAD1;
+    static constexpr int Numpad2 = VK_NUMPAD2;
+    static constexpr int Numpad3 = VK_NUMPAD3;
+    static constexpr int Numpad4 = VK_NUMPAD4;
+    static constexpr int Numpad5 = VK_NUMPAD5;
+    static constexpr int Numpad6 = VK_NUMPAD6;
+    static constexpr int Numpad7 = VK_NUMPAD7;
+    static constexpr int Numpad8 = VK_NUMPAD8;
+    static constexpr int Numpad9 = VK_NUMPAD9;
+
+    static constexpr int NumpadAdd = VK_ADD;
+    static constexpr int NumpadSubtract = VK_SUBTRACT;
+    static constexpr int NumpadMultiply = VK_MULTIPLY;
+    static constexpr int NumpadDivide = VK_DIVIDE;
+    static constexpr int NumpadDecimal = VK_DECIMAL;
+    static constexpr int NumLock = VK_NUMLOCK;
+
+    static constexpr int PrintScreen = VK_SNAPSHOT;
+    static constexpr int ScrollLock = VK_SCROLL;
+    static constexpr int Pause = VK_PAUSE;
+    static constexpr int Menu = VK_APPS;
     // Mouse Buttons
     static constexpr int MouseLeft = VK_LBUTTON;
     static constexpr int MouseRight = VK_RBUTTON;
@@ -107,7 +151,29 @@ struct KeyCode {
     static constexpr int F9 = XK_F9;
     static constexpr int F10 = XK_F10;
     static constexpr int F11 = XK_F11;
-    static constexpr int F12 = XK_F12;
+    static constexpr int F13 = XK_F13;
+    static constexpr int F14 = XK_F14;
+    static constexpr int F15 = XK_F15;
+    static constexpr int F16 = XK_F16;
+    static constexpr int F17 = XK_F17;
+    static constexpr int F18 = XK_F18;
+    static constexpr int F19 = XK_F19;
+    static constexpr int F20 = XK_F20;
+    static constexpr int F21 = XK_F21;
+    static constexpr int F22 = XK_F22;
+    static constexpr int F23 = XK_F23;
+    static constexpr int F24 = XK_F24;
+    static constexpr int F25 = XK_F25;
+    static constexpr int F26 = XK_F26;
+    static constexpr int F27 = XK_F27;
+    static constexpr int F28 = XK_F28;
+    static constexpr int F29 = XK_F29;
+    static constexpr int F30 = XK_F30;
+    static constexpr int F31 = XK_F31;
+    static constexpr int F32 = XK_F32;
+    static constexpr int F33 = XK_F33;
+    static constexpr int F34 = XK_F34;
+    static constexpr int F35 = XK_F35;
 
     static constexpr int LeftShift = XK_Shift_L;
     static constexpr int RightShift = XK_Shift_R;
@@ -115,22 +181,36 @@ struct KeyCode {
     static constexpr int RightCtrl = XK_Control_R;
     static constexpr int LeftAlt = XK_Alt_L;
     static constexpr int RightAlt = XK_Alt_R;
+    static constexpr int CapsLock = XK_Caps_Lock;
 
     static constexpr int Enter = XK_Return;
     static constexpr int Backspace = XK_BackSpace;
     static constexpr int Tab = XK_Tab;
     static constexpr int Escape = XK_Escape;
     static constexpr int Space = XK_space;
+    static constexpr int Insert = XK_Insert;
+    static constexpr int Delete = XK_Delete;
+    static constexpr int Home = XK_Home;
+    static constexpr int End = XK_End;
+    static constexpr int PageUp = XK_Page_Up;
+    static constexpr int PageDown = XK_Page_Down;
 
     static constexpr int LeftArrow = XK_Left;
     static constexpr int RightArrow = XK_Right;
     static constexpr int UpArrow = XK_Up;
     static constexpr int DownArrow = XK_Down;
 
+    static constexpr int NumLock = XK_Num_Lock;
+    static constexpr int ScrollLock = XK_Scroll_Lock;
+    static constexpr int Pause = XK_Pause;
+    static constexpr int PrintScreen = XK_Print;
+
     // Mouse Buttons (X11 button mappings)
     static constexpr int MouseLeft = 1;
-    static constexpr int MouseRight = 3;
     static constexpr int MouseMiddle = 2;
+    static constexpr int MouseRight = 3;
+    static constexpr int MouseScrollUp = 4;
+    static constexpr int MouseScrollDown = 5;
     static constexpr int MouseX1 = 8;
     static constexpr int MouseX2 = 9;
 
@@ -154,12 +234,19 @@ struct KeyCode {
     static constexpr int RightCtrl = kVK_RightControl;
     static constexpr int LeftAlt = kVK_Option;
     static constexpr int RightAlt = kVK_RightOption;
+    static constexpr int CapsLock = kVK_CapsLock;
 
     static constexpr int Enter = kVK_Return;
     static constexpr int Backspace = kVK_Delete;
     static constexpr int Tab = kVK_Tab;
     static constexpr int Escape = kVK_Escape;
     static constexpr int Space = kVK_Space;
+    static constexpr int Insert = 0x72; // Help key = Insert
+    static constexpr int Delete = kVK_ForwardDelete;
+    static constexpr int Home = kVK_Home;
+    static constexpr int End = kVK_End;
+    static constexpr int PageUp = kVK_PageUp;
+    static constexpr int PageDown = kVK_PageDown;
 
     static constexpr int LeftArrow = kVK_LeftArrow;
     static constexpr int RightArrow = kVK_RightArrow;
@@ -169,16 +256,20 @@ struct KeyCode {
     // Mouse Buttons (macOS uses CGEvent)
     static constexpr int MouseLeft = 0;  // kCGMouseButtonLeft
     static constexpr int MouseRight = 1; // kCGMouseButtonRight
-    static constexpr int MouseMiddle = 2; // kCGMouseButtonCenter
+    static constexpr int MouseMiddle = 2;
 #endif
 };
 
 class Input {
 private:
 static bool mouseLocked;
+static std::unordered_map<int, bool> prevKeyStates;
 public:
     // Check if a keyboard key is currently down
     static bool GetKeyDown(int key) {
+        return isKeyHeldDown(key);
+    }
+    static bool GetKeyPressed(int key) {
         return isKeyPressed(key);
     }
     static void LockMouseToCenter(bool hideCursor = false) {
@@ -214,8 +305,22 @@ private:
         ClientToScreen(hwnd, &center);
         SetCursorPos(center.x, center.y);
     }
+    static bool isKeyPressed(int key){
+        bool currentlyDown = isKeyHeldDown(key);
+        bool wasDown = false;
 
-    static bool isKeyPressed(int key) {
+        auto it = prevKeyStates.find(key);
+        if (it != prevKeyStates.end()) {
+            wasDown = it->second;
+        }
+
+        // Update the stored state
+        prevKeyStates[key] = currentlyDown;
+
+        // Return true only if currently down, but was not down previously
+        return currentlyDown && !wasDown;
+    }
+    static bool isKeyHeldDown(int key) {
         return GetAsyncKeyState(key) & 0x8000;
     }
 
@@ -251,7 +356,22 @@ private:
         XFlush(display);
         XCloseDisplay(display);
     }
-    static bool isKeyPressed(KeyCode key) {
+    static bool isKeyPressed(KeyCode key){
+        bool currentlyDown = isKeyHeldDown(key);
+        bool wasDown = false;
+
+        auto it = prevKeyStates.find(key);
+        if (it != prevKeyStates.end()) {
+            wasDown = it->second;
+        }
+
+        // Update the stored state
+        prevKeyStates[key] = currentlyDown;
+
+        // Return true only if currently down, but was not down previously
+        return currentlyDown && !wasDown;
+    }
+    static bool isKeyHeldDown(KeyCode key) {
         Display* display = XOpenDisplay(nullptr);
         if (!display) return false;
 
@@ -313,9 +433,24 @@ private:
         CGWarpMouseCursorPosition(center);
         CGAssociateMouseAndMouseCursorPosition(true);
     }
-    static bool isKeyPressed(KeyCode key) {
+    static bool isKeyHeldDown(KeyCode key) {
         CGEventFlags flags = CGEventSourceFlagsState(kCGEventSourceStateHIDSystemState);
         return (flags & key) != 0;
+    }
+    static bool isKeyPressed(KeyCode key){
+        bool currentlyDown = isKeyHeldDown(key);
+        bool wasDown = false;
+
+        auto it = prevKeyStates.find(key);
+        if (it != prevKeyStates.end()) {
+            wasDown = it->second;
+        }
+
+        // Update the stored state
+        prevKeyStates[key] = currentlyDown;
+
+        // Return true only if currently down, but was not down previously
+        return currentlyDown && !wasDown;
     }
 
     static bool isMouseButtonPressed(KeyCode button) {
@@ -333,3 +468,5 @@ private:
     }
 #endif
 };
+
+std::unordered_map<int, bool> Input::prevKeyStates;
