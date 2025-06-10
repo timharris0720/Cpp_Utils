@@ -2,6 +2,22 @@
 
 ## Available Utils
 
+
+## CMake Usage
+
+```cpp
+include(FetchContent)
+
+FetchContent_Declare(
+    CppUtils
+    GIT_REPOSITORY https://github.com/timharris0720/Cpp_Utils.git
+    GIT_TAG main
+)
+
+FetchContent_MakeAvailable(CppUtils)
+target_link_libraries(AppName PRIVATE CppUtils)
+```
+
 ### Logger
 
 ```cpp
