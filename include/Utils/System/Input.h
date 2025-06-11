@@ -263,14 +263,26 @@ struct KeyCode {
 class Input {
 private:
 static bool mouseLocked;
-static std::unordered_map<int, bool> prevKeyStates;
+static inline std::unordered_map<int, bool> prevKeyStates;
 public:
     // Check if a keyboard key is currently down
     static bool GetKeyDown(int key) {
         return isKeyHeldDown(key);
     }
     static bool GetKeyPressed(int key) {
-        return isKeyPressed(key);
+        bool currentlyDown = isKeyHeldDown(key);
+        bool wasDown = false;
+
+        auto it = prevKeyStates.find(key);
+        if (it != prevKeyStates.end()) {
+            wasDown = it->second;
+        }
+
+        // Update the stored state
+        prevKeyStates[key] = currentlyDown;
+
+        // Return true only if currently down, but was not down previously
+        return currentlyDown && !wasDown;
     }
     static void LockMouseToCenter(bool hideCursor = false) {
         lockCenter(hideCursor);
@@ -304,21 +316,6 @@ private:
 
         ClientToScreen(hwnd, &center);
         SetCursorPos(center.x, center.y);
-    }
-    static bool isKeyPressed(int key){
-        bool currentlyDown = isKeyHeldDown(key);
-        bool wasDown = false;
-
-        auto it = prevKeyStates.find(key);
-        if (it != prevKeyStates.end()) {
-            wasDown = it->second;
-        }
-
-        // Update the stored state
-        prevKeyStates[key] = currentlyDown;
-
-        // Return true only if currently down, but was not down previously
-        return currentlyDown && !wasDown;
     }
     static bool isKeyHeldDown(int key) {
         return GetAsyncKeyState(key) & 0x8000;
@@ -469,4 +466,4 @@ private:
 #endif
 };
 
-std::unordered_map<int, bool> Input::prevKeyStates;
+//std::unordered_map<int, bool> Input::prevKeyStates;
