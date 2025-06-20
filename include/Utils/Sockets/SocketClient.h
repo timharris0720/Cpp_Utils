@@ -1,5 +1,8 @@
 #ifdef ENABLE_SOCKETS
 #pragma once
+#ifndef ENABLE_JSON
+    #define ENABLE_JSON
+#endif
 #include <Utils/json.hpp>
 #include <Utils/Logger.h>
 #include <stdio.h>
