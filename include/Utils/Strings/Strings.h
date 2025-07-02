@@ -24,6 +24,16 @@ namespace String {
         // Check if string only has whitespace
         return std::all_of(s->begin(), s->end(), [](unsigned char c) { return std::isspace(c); });
     }
+    inline std::string Substring(const std::string& s, size_t start, size_t end) {
+        if (start >= s.size() || end <= start) {
+            return "";
+        }
+        // Clamp end to not exceed string size
+        if (end > s.size()) {
+            end = s.size();
+        }
+        return s.substr(start, end - start);
+    }
     inline std::string StripString(std::string str, std::string stripChar = "")
     {
         if (str.length() != 0)
