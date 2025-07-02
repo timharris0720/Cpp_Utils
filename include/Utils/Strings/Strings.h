@@ -7,13 +7,22 @@
 #include <cstdlib>
 #include <sstream>
 #include "utf8.h"
-
+#include <algorithm>
+#include <cctype>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 namespace String {
     namespace StripTypes {
         inline std::string Newline = "\n";
+    }
+    inline bool IsNullOrWhitespace(const std::string* s) {
+        if (s == nullptr) {
+            return true;
+        }
+    
+        // Check if string only has whitespace
+        return std::all_of(s->begin(), s->end(), [](unsigned char c) { return std::isspace(c); });
     }
     inline std::string StripString(std::string str, std::string stripChar = "")
     {
