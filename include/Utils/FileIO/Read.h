@@ -12,6 +12,7 @@ namespace FileIO {
         std::string filename;
         std::vector<std::string> fileLines;
         public:
+        FileReader() = default;
         FileReader(const std::string& filename){
             this->filename = filename;
             fileLines = ReadLines();
