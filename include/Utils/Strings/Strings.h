@@ -16,6 +16,17 @@ namespace String {
     namespace StripTypes {
         inline std::string Newline = "\n";
     }
+    
+    inline bool IsSpace(const std::string& s) {
+        if (s.empty()) return false;
+
+        for (char c : s) {
+            if (!std::isspace(static_cast<unsigned char>(c))) {
+                return false;
+            }
+        }
+        return true;
+    }
     inline bool StartsWith(const std::string& str, const std::string& prefix) {
         if (prefix.size() > str.size()) return false;
         return str.compare(0, prefix.size(), prefix) == 0;
