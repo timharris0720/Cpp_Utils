@@ -16,7 +16,10 @@ namespace String {
     namespace StripTypes {
         inline std::string Newline = "\n";
     }
-    
+
+    inline int Count(const std::string& str, char ch) {
+        return std::count(str.begin(), str.end(), ch);
+    }
     inline bool IsSpace(const std::string& s) {
         if (s.empty()) return false;
 
