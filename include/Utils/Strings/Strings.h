@@ -20,6 +20,12 @@ namespace String {
     inline int Count(const std::string& str, char ch) {
         return std::count(str.begin(), str.end(), ch);
     }
+    inline std::string ToLower(const std::string& s){
+        std::string lower = s;
+        std::transform(lower.begin(), lower.end(), lower.begin(),
+                    [](unsigned char c) { return std::tolower(c); });
+        return lower;
+    }
     inline bool IsSpace(const std::string& s) {
         if (s.empty()) return false;
 
