@@ -63,27 +63,24 @@ namespace String {
         }
         return s.substr(start, end - start);
     }
-    inline std::string StripString(std::string str, std::string stripChar = "")
+    inline std::string Strip(std::string str, std::string stripChar = "")
     {
-        if (str.length() != 0)
+        // Remove leading
+        while (!str.empty() && 
+            (std::isspace(static_cast<unsigned char>(str.front())) ||
+                (!stripChar.empty() && str.front() == stripChar[0])))
         {
-            auto w = std::string(stripChar);
-            auto n = std::string("\n");
-            auto r = std::string("\t");
-            auto t = std::string("\r");
-            auto v = std::string(1, str.front());
-            while ((v == t) || (v == r) || (v == n) || (v == w))
-            {
-                str.erase(str.begin());
-                v = std::string(1, str.front());
-            }
-            v = std::string(1, str.back());
-            while ((v == t) || (v == r) || (v == n) || (v == w))
-            {
-                str.erase(str.end() - 1);
-                v = std::string(1, str.back());
-            }
+            str.erase(str.begin());
         }
+
+        // Remove trailing
+        while (!str.empty() && 
+            (std::isspace(static_cast<unsigned char>(str.back())) ||
+                (!stripChar.empty() && str.back() == stripChar[0])))
+        {
+            str.pop_back();
+        }
+
         return str;
     }
     inline std::vector<std::string> SplitString(const std::string& istr, const std::string& del, int maxSplits = -1) {
