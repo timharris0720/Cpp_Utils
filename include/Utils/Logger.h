@@ -9,9 +9,142 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-namespace Logging {
-inline bool writeToLogFile_Global = true;
-}
+
+#include <Strings.h>
+namespace Log {
+	inline bool writeToLogFile_Global = true;
+	}
+
+
+	inline void DebugLog(const char* fmt,const char* path, ...) {
+		#ifndef NDEBUG
+		#ifdef WIN32
+		
+				CONSOLE_SCREEN_BUFFER_INFO csbi;
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+				GetConsoleScreenBufferInfo(hConsole, &csbi);
+				WORD originalAttributes = csbi.wAttributes;
+				SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+				std::cout << "[ DEBUG ] : ";
+				
+				SetConsoleTextAttribute(hConsole, originalAttributes);
+		#else
+		
+				std::cout << "\033[32;1m [ DEBUG ] : \033[0m";
+		
+		#endif //_WIN32
+		
+		va_list args;
+		va_start(args, path);
+
+		std::string line = std::string(fmt);
+		line += "\n";
+
+		vprintf(line.c_str(), args);
+		
+
+
+
+		if (Log::writeToLogFile_Global == true) {
+			FILE* file = fopen(path, "a");
+			if (!file) {
+				printf("Failed to open log file: %s\n", path);
+				return;
+			}
+			vfprintf(file, line.c_str(), args);
+			fclose(file);
+		}
+		va_end(args);
+	
+		#endif // DEBUG
+				
+		
+	}
+	inline void ErrorLog(const char* fmt, const char* path, ...) {
+
+		if (path == nullptr || std::strlen(path) == 0) {
+			path = "Log.txt";
+		}
+	#ifdef WIN32
+	
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		GetConsoleScreenBufferInfo(hConsole, &csbi);
+		WORD originalAttributes = csbi.wAttributes;
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cout << "[ ERROR ] : ";
+		SetConsoleTextAttribute(hConsole, originalAttributes);
+	#else
+	
+		std::cout << "\033[31;1m [ ERROR ] : \033[0m";
+
+	#endif
+	
+		va_list args;
+		va_start(args, path);
+
+		std::string line = std::string(fmt);
+		line += "\n";
+
+		vprintf(line.c_str(), args);
+		
+
+
+
+		if (Log::writeToLogFile_Global == true) {
+			FILE* file = fopen(path, "a");
+			if (!file) {
+				printf("Failed to open log file: %s\n", path);
+				return;
+			}
+			vfprintf(file, line.c_str(), args);
+			fclose(file);
+		}
+		va_end(args);
+		
+		}
+	inline void InfoLog(const char* fmt,const char* path, ...) {
+		if (path == nullptr || std::strlen(path) == 0) {
+			path = "Log.txt";
+		}
+		#ifdef WIN32
+
+				CONSOLE_SCREEN_BUFFER_INFO csbi;
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+				GetConsoleScreenBufferInfo(hConsole, &csbi);
+				WORD originalAttributes = csbi.wAttributes;
+				SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+				std::cout << "[ INFO ] : ";
+				SetConsoleTextAttribute(hConsole, originalAttributes);
+		#else
+
+				std::cout << "\033[34;1m: [ INFO ] : \033[0m";
+				
+		#endif
+				va_list args;
+				va_start(args, path);
+
+				std::string line = std::string(fmt);
+				line += "\n";
+
+				vprintf(line.c_str(), args);
+				
+
+
+
+				if (Log::writeToLogFile_Global == true) {
+					FILE* file = fopen(path, "a");
+					if (!file) {
+						printf("Failed to open log file: %s\n", path);
+						return;
+					}
+					vfprintf(file, line.c_str(), args);
+					fclose(file);
+				}
+				va_end(args);
+	}
+
+
 class Logger {
 private:
     std::string LogFile;
@@ -31,16 +164,19 @@ private:
 
 public:
     Logger() = default;
-    Logger(std::string loggerName, std::string pathLogFile = "Log.txt", bool fileLogging = true) {LoggerName = loggerName;LogFile=pathLogFile; InfoLogTitle = "[ INFO | " + LoggerName + "] : "; DebuLogTitle = "[ DEBUG | " + LoggerName + "] : "; ErroLogTitle = "[ ERROR | " + LoggerName + "] : ";LogToFile = fileLogging;}
-    void ToggleFileLogging(){
+    Logger(std::string loggerName, std::string pathLogFile = "Log.txt", bool fileLog = true) {
+		LoggerName = loggerName;
+		LogFile=pathLogFile;
+		LogToFile = fileLog;
+	}
+    void ToggleFileLog(){
         LogToFile = !LogToFile;
     }
-    void ToggleFileLogging(bool decider){
+    void ToggleFileLog(bool decider){
         LogToFile = decider;
     }
 	void setLoggerName(std::string name_){
 		LoggerName = name_;
-		InfoLogTitle = "[ INFO | " + LoggerName + "] : "; DebuLogTitle = "[ DEBUG | " + LoggerName + "] : "; ErroLogTitle = "[ ERROR | " + LoggerName + "] : ";
 	}
 	std::string getLoggerName(){
 		return LoggerName;
@@ -54,40 +190,36 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-		std::cout << DebuLogTitle;
+		std::cout << "[ DEBUG ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[32;1m" << DebuLogTitle << " \033[0m";
+		std::cout << "\033[32;1m [ DEBUG ] : \033[0m";
 
 #endif //_WIN32
 
 		va_list args;
 		va_start(args, fmt);
-		vprintf(fmt, args);
-		
-		va_end(args);
-		
 
-		// Return the formatted string as a std::string
-		std::cout << std::endl;
-		if (LogToFile == true || Logging::writeToLogFile_Global == true) {
-			va_list args;
-			va_start(args, fmt);
+		std::string line = std::string(fmt);
+		line += "\n";
 
-			// Determine the size of the formatted string
-			size_t size = std::vsnprintf(nullptr, 0, fmt, args) + 1;  // Include space for '\0'
-			va_end(args);  // Reset va_list for the second use
+		vprintf(line.c_str(), args);
 
-			// Allocate the necessary buffer in a C++ std::string
-			std::vector<char> buffer(size);
-			va_start(args, fmt);  // Restart the variadic argument list
-			std::vsnprintf(buffer.data(), size, fmt, args);  // Format the string into the buffer
-			va_end(args);
 
-			writeFile(DebuLogTitle + std::string(buffer.data()), LogFile);
+
+
+		if (LogToFile == true || Log::writeToLogFile_Global == true) {
+			FILE* file = fopen(LogFile.c_str(), "a");
+			if (!file) {
+				printf("Failed to open log file: %s\n", LogFile.c_str());
+				return;
+			}
+			vfprintf(file, line.c_str(), args);
+			fclose(file);
 		}
-	
+		va_end(args);
+			
 #endif // DEBUG
 		
 
@@ -100,36 +232,35 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
-		std::cout << ErroLogTitle ;
+		std::cout << "[ ERROR ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[31;1m" << ErroLogTitle << "\033[0m";
+		std::cout << "\033[31;1m [ ERROR ] : \033[0m";
 
 #endif
 
 		va_list args;
 		va_start(args, fmt);
-		vprintf(fmt, args);
-		va_end(args);
-		std::cout << std::endl;
 
-		if (LogToFile == true || Logging::writeToLogFile_Global == true) {
-			va_list args;
-			va_start(args, fmt);
+		std::string line = std::string(fmt);
+		line += "\n";
 
-			// Determine the size of the formatted string
-			size_t size = std::vsnprintf(nullptr, 0, fmt, args) + 1;  // Include space for '\0'
-			va_end(args);  // Reset va_list for the second use
+		vprintf(line.c_str(), args);
 
-			// Allocate the necessary buffer in a C++ std::string
-			std::vector<char> buffer(size);
-			va_start(args, fmt);  // Restart the variadic argument list
-			std::vsnprintf(buffer.data(), size, fmt, args);  // Format the string into the buffer
-			va_end(args);
 
-			writeFile(ErroLogTitle + std::string(buffer.data()), LogFile);
+
+
+		if (LogToFile == true || Log::writeToLogFile_Global == true) {
+			FILE* file = fopen(LogFile.c_str(), "a");
+			if (!file) {
+				printf("Failed to open log file: %s\n", LogFile.c_str());
+				return;
+			}
+			vfprintf(file, line.c_str(), args);
+			fclose(file);
 		}
+		va_end(args);
 	}
 	void InfoLog(const char* fmt, ...) {
         
@@ -140,31 +271,35 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-		std::cout << InfoLogTitle;
+		std::cout << "[ ERROR ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[34;1m:" << InfoLogTitle << "\033[0m";
+		std::cout << "\033[34;1m [ ERROR ] : \033[0m";
 
 #endif
 
 		va_list args;
 		va_start(args, fmt);
-		vprintf(fmt, args);
-		va_end(args);
-		std::cout << std::endl;
 
-		if (LogToFile == true || Logging::writeToLogFile_Global == true) {
-			va_list args;
-			va_start(args, fmt);
-			size_t size = std::vsnprintf(nullptr, 0, fmt, args) + 1;
-			va_end(args);
-			std::vector<char> buffer(size);
-			va_start(args, fmt);
-			std::vsnprintf(buffer.data(), size, fmt, args); 
-			va_end(args);
+		std::string line = std::string(fmt);
+		line += "\n";
 
-			writeFile(InfoLogTitle + std::string(buffer.data()), LogFile);
+		vprintf(line.c_str(), args);
+
+
+
+
+		if (LogToFile == true || Log::writeToLogFile_Global == true) {
+			FILE* file = fopen(LogFile.c_str(), "a");
+			if (!file) {
+				printf("Failed to open log file: %s\n", LogFile.c_str());
+				return;
+			}
+			vfprintf(file, line.c_str(), args);
+			fclose(file);
 		}
+		va_end(args);
 	}
+
 };
