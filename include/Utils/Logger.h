@@ -16,7 +16,7 @@ namespace Log {
 	}
 
 
-	inline void DebugLog(const char* fmt,const char* path, ...) {
+	inline void Debug(const char* fmt,const char* path, ...) {
 		#ifndef NDEBUG
 		#ifdef WIN32
 		
@@ -60,7 +60,7 @@ namespace Log {
 				
 		
 	}
-	inline void ErrorLog(const char* fmt, const char* path, ...) {
+	inline void Error(const char* fmt, const char* path, ...) {
 
 		if (path == nullptr || std::strlen(path) == 0) {
 			path = "Log.txt";
@@ -103,7 +103,7 @@ namespace Log {
 		va_end(args);
 		
 		}
-	inline void InfoLog(const char* fmt,const char* path, ...) {
+	inline void Info(const char* fmt,const char* path, ...) {
 		if (path == nullptr || std::strlen(path) == 0) {
 			path = "Log.txt";
 		}
@@ -149,9 +149,6 @@ class Logger {
 private:
     std::string LogFile;
     bool LogToFile = false;
-    std::string InfoLogTitle;
-    std::string DebuLogTitle;
-    std::string ErroLogTitle;
 	std::string LoggerName;
 	
 	void writeFile(std::string fileData, std::string path) {			
