@@ -16,7 +16,7 @@ namespace Log {
 	
 
 
-	inline void Debug(const char* fmt,const char* path, ...) 
+	inline void Debug(const char* fmt,const char* path, ...){
 		#ifndef NDEBUG
 		if (path == nullptr || std::strlen(path) == 0) {
 			path = "Log.txt";
