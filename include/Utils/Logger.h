@@ -13,14 +13,20 @@
 #include "Strings.h"
 namespace Log {
 	inline bool writeToLogFile_Global = true;
-	
+	inline std::string FileStartPath = "";
 
 
 	inline void Debug(const char* fmt,const char* path, ...){
 		#ifndef NDEBUG
+		std::string newP;
 		if (path == nullptr || std::strlen(path) == 0) {
-			path = "Log.txt";
+			newP = std::string(FileStartPath + "/Log.txt").c_str();
 		}
+		else{
+			newP = std::string(FileStartPath + "/" + path).c_str();
+		}
+
+		std::cout << path << std::endl;
 		#ifdef WIN32
 		
 				CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -38,7 +44,7 @@ namespace Log {
 		#endif //_WIN32
 		
 		va_list args;
-		va_start(args, path);
+		va_start(args, newP.c_str());
 
 		std::string line = std::string(fmt);
 		line += "\n";
@@ -49,9 +55,9 @@ namespace Log {
 
 
 		if (Log::writeToLogFile_Global == true) {
-			FILE* file = fopen(path, "a");
+			FILE* file = fopen(newP.c_str(), "a");
 			if (!file) {
-				printf("Failed to open log file: %s\n", path);
+				printf("Failed to open log file: %s\n", newP.c_str());
 				return;
 			}
 			vfprintf(file, line.c_str(), args);
@@ -64,9 +70,12 @@ namespace Log {
 		
 	}
 	inline void Error(const char* fmt, const char* path, ...) {
-
+		std::string newP;
 		if (path == nullptr || std::strlen(path) == 0) {
-			path = "Log.txt";
+			newP = std::string(FileStartPath + "/Log.txt").c_str();
+		}
+		else{
+			newP = std::string(FileStartPath + "/" + path).c_str();
 		}
 	#ifdef WIN32
 	
@@ -84,7 +93,7 @@ namespace Log {
 	#endif
 	
 		va_list args;
-		va_start(args, path);
+		va_start(args, newP.c_str());
 
 		std::string line = std::string(fmt);
 		line += "\n";
@@ -95,9 +104,9 @@ namespace Log {
 
 
 		if (Log::writeToLogFile_Global == true) {
-			FILE* file = fopen(path, "a");
+			FILE* file = fopen(newP.c_str(), "a");
 			if (!file) {
-				printf("Failed to open log file: %s\n", path);
+				printf("Failed to open log file: %s\n", newP.c_str());
 				return;
 			}
 			vfprintf(file, line.c_str(), args);
@@ -107,9 +116,14 @@ namespace Log {
 		
 		}
 	inline void Info(const char* fmt,const char* path, ...) {
+		std::string newP;
 		if (path == nullptr || std::strlen(path) == 0) {
-			path = "Log.txt";
+			newP = std::string(FileStartPath + "/Log.txt").c_str();
 		}
+		else{
+			newP = std::string(FileStartPath + "/" + path).c_str();
+		}
+
 		#ifdef WIN32
 
 				CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -125,7 +139,7 @@ namespace Log {
 				
 		#endif
 				va_list args;
-				va_start(args, path);
+				va_start(args, newP.c_str());
 
 				std::string line = std::string(fmt);
 				line += "\n";
@@ -136,9 +150,9 @@ namespace Log {
 
 
 				if (Log::writeToLogFile_Global == true) {
-					FILE* file = fopen(path, "a");
+					FILE* file = fopen(newP.c_str(), "a");
 					if (!file) {
-						printf("Failed to open log file: %s\n", path);
+						printf("Failed to open log file: %s\n", newP.c_str());
 						return;
 					}
 					vfprintf(file, line.c_str(), args);
@@ -154,7 +168,7 @@ private:
 	std::string LogFile;
 	bool LogToFile = false;
 	std::string LoggerName;
-	
+	std::string logPath = "";
 	void writeFile(std::string fileData, std::string path) {			
 	
 		std::ofstream file(path, std::ios::app);
@@ -165,10 +179,19 @@ private:
 
 public:
 	Logger() = default;
-	Logger(std::string loggerName, std::string pathLogFile = "Log.txt", bool fileLog = true) {
+	Logger(std::string loggerName, std::string pathLogFile = "Log.txt", bool fileLog = true, std::string exeLocation = "") {
 		LoggerName = loggerName;
 		LogFile=pathLogFile;
+		logPath = exeLocation;
 		LogToFile = fileLog;
+
+		if (LogFile.c_str() == nullptr || std::strlen(LogFile.c_str()) == 0) {
+			LogFile = std::string(logPath + "/Log.txt").c_str();
+		}
+		else{
+			LogFile = std::string(logPath +  "/" + LogFile).c_str();
+		}
+
 	}
 	void ToggleFileLog(){
 		LogToFile = !LogToFile;
@@ -184,6 +207,7 @@ public:
 	}
 	void DebugLog(const char* fmt, ...) {
 #ifndef NDEBUG
+		
 #ifdef WIN32
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -226,6 +250,7 @@ public:
 
 	}
 	void ErrorLog(const char* fmt, ...) {
+		
 #ifdef WIN32
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
