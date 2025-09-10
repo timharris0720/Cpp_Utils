@@ -9,7 +9,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-
+#include "Time.h"
 #include "Strings.h"
 namespace Log {
 	inline bool writeToLogFile_Global = true;
@@ -34,12 +34,12 @@ namespace Log {
 				GetConsoleScreenBufferInfo(hConsole, &csbi);
 				WORD originalAttributes = csbi.wAttributes;
 				SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-				std::cout << "[ DEBUG ] : ";
+				std::cout << "[ DEBUG : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 				
 				SetConsoleTextAttribute(hConsole, originalAttributes);
 		#else
 		
-				std::cout << "\033[32;1m [ DEBUG ] : \033[0m";
+				std::cout << "\033[32;1m [ DEBUG : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 		
 		#endif //_WIN32
 		
@@ -84,11 +84,11 @@ namespace Log {
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
-		std::cout << "[ ERROR ] : ";
+		std::cout << "[ ERROR : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 	#else
 	
-		std::cout << "\033[31;1m [ ERROR ] : \033[0m";
+		std::cout << "\033[31;1m [ ERROR : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 
 	#endif
 	
@@ -131,11 +131,11 @@ namespace Log {
 				GetConsoleScreenBufferInfo(hConsole, &csbi);
 				WORD originalAttributes = csbi.wAttributes;
 				SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-				std::cout << "[ INFO ] : ";
+				std::cout << "[ INFO : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 				SetConsoleTextAttribute(hConsole, originalAttributes);
 		#else
 
-				std::cout << "\033[34;1m: [ INFO ] : \033[0m";
+				std::cout << "\033[34;1m: [ INFO : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 				
 		#endif
 				va_list args;
@@ -215,11 +215,11 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-		std::cout << "[ DEBUG ] : ";
+		std::cout << "[ DEBUG : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[32;1m [ DEBUG ] : \033[0m";
+		std::cout << "\033[32;1m [ DEBUG : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 
 #endif //_WIN32
 
@@ -258,11 +258,11 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
-		std::cout << "[ ERROR ] : ";
+		std::cout << "[ ERROR : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[31;1m [ ERROR ] : \033[0m";
+		std::cout << "\033[31;1m [ ERROR : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 
 #endif
 
@@ -297,11 +297,11 @@ public:
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
 		WORD originalAttributes = csbi.wAttributes;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-		std::cout << "[ ERROR ] : ";
+		std::cout << "[ INFO : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : ";
 		SetConsoleTextAttribute(hConsole, originalAttributes);
 #else
 
-		std::cout << "\033[34;1m [ ERROR ] : \033[0m";
+		std::cout << "\033[34;1m [ INFO : " + Time::getDate_DD_MM_YYYY() + " -  " + Time::GetTime_HH_MM_SS_MMM() + " ] : \033[0m";
 
 #endif
 
