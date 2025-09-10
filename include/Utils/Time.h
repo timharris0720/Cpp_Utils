@@ -41,7 +41,7 @@ namespace Time{
         time_t timestamp;
         time(&timestamp);
         struct tm datetime = *localtime(&timestamp);
-        std::string t = std::to_string(datetime.tm_mday) + "/" + std::to_string(datetime.tm_mon + 1) + "/" + std::to_string(datetime.tm_year);
+        std::string t = std::to_string(datetime.tm_mday) + "/" + std::to_string(datetime.tm_mon + 1) + "/" + std::to_string(datetime.tm_year + 1900);
         return t;
     }
 }
