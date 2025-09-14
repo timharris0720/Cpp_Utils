@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <direct.h>
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -15,7 +16,12 @@ namespace Log {
 	inline bool writeToLogFile_Global = true;
 	inline std::string FileStartPath = "";
 
+	inline void InitWkd(){
+		char path[1024]; 
+		getcwd(path, sizeof(path));
 
+		Log::FileStartPath = path;
+	}
 	inline void Debug(const char* fmt,const char* path, ...){
 		#ifndef NDEBUG
 		std::string newP;
