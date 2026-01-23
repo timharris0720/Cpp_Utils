@@ -23,14 +23,11 @@ target_link_libraries(AppName PRIVATE CppUtils)
 ```cpp
 
 #include <Utils/Logger.h>
+Log::LogGlobals::InitWorkingDir();
+Log::LogGlobals::SetLoggingFile("Log.txt");
 
-Logger logger = Logger("name", "logFilePath", true);
 
-// Info Log
-logger.InfoLog("THIS IS A LOG");
-
-// Info Log with format
-logger.InfoLog("THIS IS A LOG my name is %s", logger.getLoggerName());
+Log::InfoLog("Formatted Log: %s", "asddasd");
 
 ```
 
