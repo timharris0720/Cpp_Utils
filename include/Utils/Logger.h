@@ -56,34 +56,38 @@ namespace Log {
             path = FileStartPath + "/" + _path;
         }
 
-        inline void PrintBase(LogType type,  const char* fmt, va_list args){
-            
-             // Format message
+        inline void PrintBase(LogType type, const char* source, const char* fmt, va_list args)
+        {
             char buffer[4096];
             vsnprintf(buffer, sizeof(buffer), fmt, args);
-
+    
             std::string timeStr = Time::getDate_DD_MM_YYYY() + " - " + Time::GetTime_HH_MM_SS_MMM();
-
+    
             const char* typeStr =
                 (type == LogType::Error) ? "ERROR" :
                 (type == LogType::Info)  ? "INFO"  : "DEBUG";
-
-            std::string finalLine = "[ " + std::string(typeStr) + " : " + timeStr + " ] : " + buffer + "\n";
-
-            // ---- Console output ----
-        #ifdef WIN32
+    
+            std::string finalLine = "[ " + std::string(typeStr) + " : " + timeStr + " ]";
+    
+            if (source && source[0] != '\0')
+                finalLine += " [ " + std::string(source) + " ]";
+    
+            finalLine += " : ";
+            finalLine += buffer;
+            finalLine += "\n";
+    
+    #ifdef WIN32
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
             CONSOLE_SCREEN_BUFFER_INFO csbi;
             GetConsoleScreenBufferInfo(hConsole, &csbi);
-
+    
             SetConsoleTextAttribute(hConsole, GetColor(type));
             std::cout << finalLine;
             SetConsoleTextAttribute(hConsole, csbi.wAttributes);
-        #else
+    #else
             std::cout << GetColor(type) << finalLine << "\033[0m";
-        #endif
-
-            // ---- File output ----
+    #endif
+    
             if (writeToLogFile_Global) {
                 FILE* file = fopen(path.c_str(), "a");
                 if (file) {
@@ -98,21 +102,56 @@ namespace Log {
     {
         va_list args;
         va_start(args, fmt);
-        LogGlobals::PrintBase(LogGlobals::LogType::Error, fmt, args);
+        LogGlobals::PrintBase(LogGlobals::LogType::Error,nullptr, fmt, args);
         va_end(args);
     }
     void InfoLog(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
-        LogGlobals::PrintBase(LogGlobals::LogType::Info, fmt, args);
+        LogGlobals::PrintBase(LogGlobals::LogType::Info, nullptr, fmt, args);
         va_end(args);
     }
     void DebugLog(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
-        LogGlobals::PrintBase(LogGlobals::LogType::Debug, fmt, args);
+        LogGlobals::PrintBase(LogGlobals::LogType::Debug, nullptr, fmt, args);
         va_end(args);
     }
+
+
+    class Logger
+    {
+    public:
+        explicit Logger(const std::string& source)
+            : m_source(source) {}
+
+        void InfoLog(const char* fmt, ...) const
+        {
+            va_list args;
+            va_start(args, fmt);
+            LogGlobals::PrintBase(LogGlobals::LogType::Info, m_source.c_str(), fmt, args);
+            va_end(args);
+        }
+
+        void ErrorLog(const char* fmt, ...) const
+        {
+            va_list args;
+            va_start(args, fmt);
+            LogGlobals::PrintBase(LogGlobals::LogType::Error, m_source.c_str(), fmt, args);
+            va_end(args);
+        }
+
+        void DebugLog(const char* fmt, ...) const
+        {
+            va_list args;
+            va_start(args, fmt);
+            LogGlobals::PrintBase(LogGlobals::LogType::Debug, m_source.c_str(), fmt, args);
+            va_end(args);
+        }
+
+    private:
+        std::string m_source;
+    };
 }
