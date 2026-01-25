@@ -126,7 +126,7 @@ namespace Log {
     public:
         explicit Logger(const std::string& source)
             : m_source(source) {}
-
+	void SetSource(std::string source) { m_source = source;}
         void InfoLog(const char* fmt, ...) const
         {
             va_list args;
