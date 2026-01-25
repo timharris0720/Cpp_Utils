@@ -98,21 +98,21 @@ namespace Log {
         }
     }
 
-    void ErrorLog(const char* fmt, ...)
+    void Error(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
         LogGlobals::PrintBase(LogGlobals::LogType::Error,nullptr, fmt, args);
         va_end(args);
     }
-    void InfoLog(const char* fmt, ...)
+    void Info(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
         LogGlobals::PrintBase(LogGlobals::LogType::Info, nullptr, fmt, args);
         va_end(args);
     }
-    void DebugLog(const char* fmt, ...)
+    void Debug(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
