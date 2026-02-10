@@ -22,7 +22,7 @@ namespace Cryptography {
             if (c == '/') return 63;
             return 255;
         }
-        inline std::string base64_decode(const std::string& input) {
+        static inline std::string base64_decode(const std::string& input) {
             std::vector<uint8_t> output;
             size_t i = 0;
 
@@ -54,7 +54,7 @@ namespace Cryptography {
             }
             return std::string(output.begin(), output.end());
         }
-        inline std::string base64_encode(const uint8_t* data, size_t size)
+        static inline std::string base64_encode(const uint8_t* data, size_t size)
         {
             std::string output;
             output.reserve(((size + 2) / 3) * 4);
@@ -93,12 +93,12 @@ namespace Cryptography {
             return output;
         }
 
-        std::string base64_encode(const std::vector<uint8_t>& data)
+        static inline std::string base64_encode(const std::vector<uint8_t>& data)
         {
             return base64_encode(data.data(), data.size());
         }
 
-        std::string base64_encode(const std::string& text)
+        static inline std::string base64_encode(const std::string& text)
         {
             return base64_encode(
                 reinterpret_cast<const uint8_t*>(text.data()),
