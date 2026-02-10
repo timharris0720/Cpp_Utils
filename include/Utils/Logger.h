@@ -29,17 +29,17 @@ namespace Log {
         static WORD GetColor(LogType type) {
             switch (type) {
                 case LogType::Error: return FOREGROUND_RED | FOREGROUND_INTENSITY;
-                case LogType::Info:  return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-                case LogType::Debug: return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+                case LogType::Info:  return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+                case LogType::Debug: return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
             }
-            return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+            //return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
         }
         #else
         static const char* GetColor(LogType type) {
             switch (type) {
                 case LogType::Error: return "\033[31;1m";
-                case LogType::Info:  return "\033[32;1m";
-                case LogType::Debug: return "\033[34;1m";
+                case LogType::Info:  return "\033[34;1m";
+                case LogType::Debug: return "\033[32;1m";
             }
             return "\033[0m";
         }
@@ -62,11 +62,23 @@ namespace Log {
             vsnprintf(buffer, sizeof(buffer), fmt, args);
     
             std::string timeStr = Time::getDate_DD_MM_YYYY() + " - " + Time::GetTime_HH_MM_SS_MMM();
-    
-            const char* typeStr =
-                (type == LogType::Error) ? "ERROR" :
-                (type == LogType::Info)  ? "INFO"  : "DEBUG";
-    
+            char* typeStr = "";
+            switch (type)
+            {
+            case LogType::Error:
+                typeStr = "ERROR";
+                break;
+            case LogType::Info:
+                typeStr = "INFO";
+                break;
+            case LogType::Debug:
+                typeStr = "DEBUG";
+                break;
+            
+            default:
+                break;
+            }
+                
             std::string finalLine = "[ " + std::string(typeStr) + " : " + timeStr + " ]";
     
             if (source && source[0] != '\0')
@@ -77,13 +89,14 @@ namespace Log {
             finalLine += "\n";
     
     #ifdef WIN32
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
             CONSOLE_SCREEN_BUFFER_INFO csbi;
+            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
             GetConsoleScreenBufferInfo(hConsole, &csbi);
+            WORD originalAttributes = csbi.wAttributes;
     
             SetConsoleTextAttribute(hConsole, GetColor(type));
             std::cout << finalLine;
-            SetConsoleTextAttribute(hConsole, csbi.wAttributes);
+            SetConsoleTextAttribute(hConsole, originalAttributes);
     #else
             std::cout << GetColor(type) << finalLine << "\033[0m";
     #endif
@@ -98,21 +111,21 @@ namespace Log {
         }
     }
 
-    inline void Error(const char* fmt, ...)
+    static  inline void Error(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
         LogGlobals::PrintBase(LogGlobals::LogType::Error,nullptr, fmt, args);
         va_end(args);
     }
-    inline void Info(const char* fmt, ...)
+    static inline void Info(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
         LogGlobals::PrintBase(LogGlobals::LogType::Info, nullptr, fmt, args);
         va_end(args);
     }
-    inline void Debug(const char* fmt, ...)
+    static inline void Debug(const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
