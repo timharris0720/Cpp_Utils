@@ -3,6 +3,7 @@ project(CppUtils LANGUAGES CXX)
 include(FetchContent)
 
 option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
+option(ENABLE_WEB_SERVER "Enable web server in utils library" OFF)
 option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" ON)
 option(ENABLE_JSON  "Enable JSON in utils library" ON)
 option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" ON)
@@ -13,7 +14,20 @@ option(ENABLE_REFLECTION  "Enable Reflection Support in utils library" OFF)
 add_library(CppUtils INTERFACE)
 target_include_directories(CppUtils INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+if(ENABLE_WEB_SERVER)
+        
+    FetchContent_Declare(
+        httplib
+        GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+        GIT_TAG master
+    )
 
+    FetchContent_MakeAvailable(httplib)
+    target_link_libraries(CppUtils INTERFACE httplib::httplib)
+    target_compile_definitions(CppUtils INTERFACE ENABLE_WEB_SERVER)
+
+
+endif()
 
 if (ENABLE_WEB_REQUESTS)
     FetchContent_Declare(
