@@ -4,7 +4,7 @@ include(FetchContent)
 
 option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
 option(ENABLE_WEB_SERVER "Enable web server in utils library" OFF)
-option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" ON)
+option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" OFF)
 option(ENABLE_JSON  "Enable JSON in utils library" ON)
 option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" ON)
 option(ENABLE_REFLECTION  "Enable Reflection Support in utils library" OFF)
@@ -43,6 +43,7 @@ endif()
 # Conditionally include and link argparse
 if (ENABLE_ARGUMENT_PARSER)
     set(ARGPARSE_BUILD_TESTS OFF)
+    set(ARGPARSE_BUILD_SAMPLES OFF)
     FetchContent_Declare(
         argparse
         GIT_REPOSITORY https://github.com/p-ranav/argparse.git
