@@ -42,6 +42,7 @@ endif()
 
 # Conditionally include and link argparse
 if (ENABLE_ARGUMENT_PARSER)
+    set(ARGPARSE_BUILD_TESTS OFF)
     FetchContent_Declare(
         argparse
         GIT_REPOSITORY https://github.com/p-ranav/argparse.git
