@@ -25,7 +25,7 @@ if(ENABLE_WEB_SERVER)
     FetchContent_MakeAvailable(httplib)
     target_link_libraries(CppUtils INTERFACE httplib::httplib)
     target_compile_definitions(CppUtils INTERFACE ENABLE_WEB_SERVER)
-
+message(STATUS "UTILS -  Installed HTTPLIB")
 
 endif()
 
@@ -34,9 +34,13 @@ if (ENABLE_WEB_REQUESTS)
         cpr
         GIT_REPOSITORY https://github.com/libcpr/cpr.git
     )
+    set(CPR_USE_SYSTEM_CURL ON)
     FetchContent_MakeAvailable(cpr)
+
     target_link_libraries(CppUtils INTERFACE cpr::cpr)
     target_compile_definitions(CppUtils INTERFACE ENABLE_WEB_REQUESTS)
+message(STATUS "UTILS -  Installed CPR")
+
 endif()
 
 # Conditionally include and link argparse
@@ -50,6 +54,8 @@ if (ENABLE_ARGUMENT_PARSER)
     FetchContent_MakeAvailable(argparse)
     target_link_libraries(CppUtils INTERFACE argparse)
     target_compile_definitions(CppUtils INTERFACE ENABLE_ARGUMENT_PARSER)
+message(STATUS "UTILS -  Installed ArgParse")
+
 endif()
 
 if(ENABLE_JSON)
@@ -63,9 +69,13 @@ if(ENABLE_JSON)
     FetchContent_MakeAvailable(json)
     target_link_libraries(CppUtils INTERFACE nlohmann_json::nlohmann_json)
     target_compile_definitions(CppUtils INTERFACE ENABLE_JSON)
+message(STATUS "UTILS -  Installed JSON")
+
 endif()
 
 if(ENABLE_SOCKETS)
+message(STATUS "UTILS -  Installed Sockets")
+
     target_compile_definitions(CppUtils INTERFACE ENABLE_SOCKETS)
 endif()
 
@@ -84,5 +94,7 @@ if (ENABLE_REFLECTION)
     FetchContent_MakeAvailable(rttr)
     target_link_libraries(CppUtils INTERFACE  RTTR::Core_Lib)
     target_compile_definitions(CppUtils INTERFACE ENABLE_REFLECTION)
+message(STATUS "UTILS -  Installed RTTR")
+
 endif()
 # Expose the include directory
