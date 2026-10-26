@@ -5,8 +5,8 @@ include(FetchContent)
 option(ENABLE_WEB_REQUESTS "Enable web requests in utils library" OFF)
 option(ENABLE_WEB_SERVER "Enable web server in utils library" OFF)
 option(ENABLE_ARGUMENT_PARSER  "Enable Argparse Integration in utils library" OFF)
-option(ENABLE_JSON  "Enable JSON in utils library" ON)
-option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" ON)
+option(ENABLE_JSON  "Enable JSON in utils library" OFF)
+option(ENABLE_SOCKETS  "Enable SOCKETS in utils library" OFF)
 option(ENABLE_REFLECTION  "Enable Reflection Support in utils library" OFF)
 
 
@@ -33,7 +33,6 @@ if (ENABLE_WEB_REQUESTS)
     FetchContent_Declare(
         cpr
         GIT_REPOSITORY https://github.com/libcpr/cpr.git
-        GIT_TAG        1.11.2 # Replace with the latest release or desired tag
     )
     FetchContent_MakeAvailable(cpr)
     target_link_libraries(CppUtils INTERFACE cpr::cpr)
@@ -57,8 +56,10 @@ if(ENABLE_JSON)
     FetchContent_Declare(
         json
         GIT_REPOSITORY https://github.com/nlohmann/json
-        GIT_TAG v3.11.3
     )
+	set(JSON_BuildTests OFF)
+    set(JSON_MultipleHeaders OFF)
+   
     FetchContent_MakeAvailable(json)
     target_link_libraries(CppUtils INTERFACE nlohmann_json::nlohmann_json)
     target_compile_definitions(CppUtils INTERFACE ENABLE_JSON)
