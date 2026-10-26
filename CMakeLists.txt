@@ -34,8 +34,11 @@ if (ENABLE_WEB_REQUESTS)
         cpr
         GIT_REPOSITORY https://github.com/libcpr/cpr.git
     )
-    set(CPR_USE_SYSTEM_CURL ON)
+    # et(CPR_USE_SYSTEM_CURL OFF CACHE INTERNAL "" FORCE)
+    set(CPR_CURL_USE_LIBPSL OFF CACHE INTERNAL "" FORCE)
+    set(CPR_USE_SYSTEM_LIB_PSL OFF CACHE INTERNAL "" FORCE)
     FetchContent_MakeAvailable(cpr)
+
 
     target_link_libraries(CppUtils INTERFACE cpr::cpr)
     target_compile_definitions(CppUtils INTERFACE ENABLE_WEB_REQUESTS)
